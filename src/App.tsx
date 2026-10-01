@@ -8,6 +8,7 @@ import { ServicesPage } from './pages/ServicesPage';
 import { ClientsPage } from './pages/ClientsPage';
 import { ContactPage } from './pages/ContactPage';
 import { CybernautCaseStudyPage } from './pages/CybernautCaseStudyPage';
+import { AnimatePresence, motion } from 'motion/react';
 
 export default function App() {
   const getInitialPath = (): RoutePath => {
@@ -39,8 +40,52 @@ export default function App() {
     if (window.location.pathname !== path) {
       window.history.pushState({}, '', path);
     }
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
+
+  // Intersection Observer for scroll reveals and Parallax
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    const applyReveal = () => {
+      const elements = document.querySelectorAll('section, .reveal-up');
+      elements.forEach((el) => {
+        if (el.tagName.toLowerCase() === 'section') {
+          el.classList.add('reveal-up');
+        }
+        observer.observe(el);
+      });
+    };
+
+    // Delay slightly to let React render
+    setTimeout(applyReveal, 100);
+
+    let frameId: number;
+    const handleScroll = () => {
+      frameId = requestAnimationFrame(() => {
+        const scrolled = window.scrollY;
+        const parallaxElements = document.querySelectorAll('.parallax-layer') as NodeListOf<HTMLElement>;
+        parallaxElements.forEach((el) => {
+          const speed = el.dataset.speed ? parseFloat(el.dataset.speed) : 0.1;
+          el.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [currentPath]);
 
   // SEO dynamic metadata management
   useEffect(() => {
@@ -79,19 +124,36 @@ export default function App() {
     }
   }, [currentPath]);
 
+  const pageVariants = {
+    initial: { opacity: 0, y: 15 },
+    in: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+    out: { opacity: 0, y: -15, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }
+  };
+
   return (
     <div className="min-h-screen bg-[#071325] text-[#d7e3fc] flex flex-col font-['DM_Sans'] antialiased selection:bg-[#ff6b00] selection:text-[#081426]">
       {/* Top Fixed Header Navbar */}
       <Navbar currentPath={currentPath} onNavigate={handleNavigate} />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full pt-20">
-        {currentPath === '/' && <HomePage onNavigate={handleNavigate} />}
-        {currentPath === '/work' && <WorkPage onNavigate={handleNavigate} />}
-        {currentPath === '/services' && <ServicesPage onNavigate={handleNavigate} />}
-        {currentPath === '/clients' && <ClientsPage onNavigate={handleNavigate} />}
-        {currentPath === '/contact' && <ContactPage />}
-        {currentPath === '/work/cybernaut' && <CybernautCaseStudyPage onNavigate={handleNavigate} />}
+      <main className="flex-1 w-full pt-20 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentPath}
+            initial="initial"
+            animate="in"
+            exit="out"
+            variants={pageVariants}
+            className="w-full h-full"
+          >
+            {currentPath === '/' && <HomePage onNavigate={handleNavigate} />}
+            {currentPath === '/work' && <WorkPage onNavigate={handleNavigate} />}
+            {currentPath === '/services' && <ServicesPage onNavigate={handleNavigate} />}
+            {currentPath === '/clients' && <ClientsPage onNavigate={handleNavigate} />}
+            {currentPath === '/contact' && <ContactPage />}
+            {currentPath === '/work/cybernaut' && <CybernautCaseStudyPage onNavigate={handleNavigate} />}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Persistent Global Footer */}

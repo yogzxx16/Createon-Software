@@ -123,10 +123,10 @@ export const ProjectShowcase: React.FC<ProjectShowcaseProps> = ({
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all"
+                className="group inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all active:scale-[0.98]"
               >
                 <span>VIEW LIVE SITE</span>
-                <span className="material-symbols-outlined text-sm">arrow_outward</span>
+                <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
               </a>
             )}
 
@@ -136,18 +136,18 @@ export const ProjectShowcase: React.FC<ProjectShowcaseProps> = ({
                   href="https://www.cybernaut.co.in/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all"
+                  className="group inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all active:scale-[0.98]"
                 >
                   <span>VIEW LIVE PORTAL</span>
-                  <span className="material-symbols-outlined text-sm">arrow_outward</span>
+                  <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
                 </a>
                 {onNavigate && (
                   <button
                     onClick={() => onNavigate('/work/cybernaut')}
-                    className="inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider text-[#d7e3fc] hover:text-white border border-white/[0.14] hover:border-white px-4 py-3 rounded transition-all"
+                    className="group inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider text-[#d7e3fc] hover:text-white border border-white/[0.14] hover:border-white px-4 py-3 rounded transition-all active:scale-[0.98]"
                   >
                     <span>CASE STUDY BLUEPRINT</span>
-                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1.5">arrow_forward</span>
                   </button>
                 )}
               </div>

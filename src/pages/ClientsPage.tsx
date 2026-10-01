@@ -89,8 +89,8 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
                 />
               </div>
               <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[0.625rem] text-[#94a3b8] px-1 py-1">
-                <span>TELEMETRY HUD : ACTIVE</span>
-                <span className="text-[#fabd00]">92.4% AUDIT SCORE</span>
+                <span>CLIENT PROJECT</span>
+                <span className="text-[#fabd00]">IN PROGRESS</span>
               </div>
               <div className="pt-2 mt-2 border-t border-white/[0.06] font-['JetBrains_Mono'] text-[0.625rem] text-[#d7e3fc]/70 flex items-center justify-between">
                 <span>SPRINT CADENCE: PHASE 2 TELEMETRY</span>

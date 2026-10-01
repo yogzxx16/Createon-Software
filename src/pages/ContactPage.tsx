@@ -6,9 +6,7 @@ export const ContactPage: React.FC = () => {
     name: '',
     email: '',
     company: '',
-    discipline: 'web_product',
-    scope: '',
-    timeline: '2_4_months',
+    message: '',
   });
 
   const [copiedToast, setCopiedToast] = useState(false);
@@ -22,21 +20,54 @@ export const ContactPage: React.FC = () => {
     setTimeout(() => setCopiedToast(false), 2500);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.scope.trim()) {
+    
+    // Client-side validation
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setErrorMessage('Please fill in all required fields (Name, Email, and What you are building).');
+      return;
+    }
+
+    if (formData.message.trim().length > 2500) {
+      setErrorMessage('Message is too long. Please keep it under 2500 characters.');
+      return;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setErrorMessage('Please enter a valid email address.');
       return;
     }
 
     setErrorMessage('');
     setSubmitting(true);
 
-    // Simulate clean dispatch without exposing keys
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Invalid response from server (not JSON). Ensure the backend is running.');
+      }
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Something went wrong while sending your message. Please try again or contact us directly.');
+      }
+
       setSubmitted(true);
-    }, 600);
+    } catch (err: any) {
+      console.error('Contact Form Error:', err);
+      setErrorMessage(err.message || 'Something went wrong while sending your message. Please try again or contact us directly.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -72,13 +103,21 @@ export const ContactPage: React.FC = () => {
                 {/* Coordinates */}
                 <div className="flex items-start gap-3">
                   <span className="material-symbols-outlined text-[#ff6b00] text-xl mt-0.5">location_on</span>
-                  <div className="space-y-0.5">
+                  <div className="space-y-1 w-full">
                     <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-[#94a3b8] block">
-                      Studio Coordinates
+                      Location
                     </span>
-                    <span className="font-['DM_Sans'] text-sm sm:text-base text-white font-medium">
-                      Chennai, Tamil Nadu, India
+                    <span className="font-['DM_Sans'] text-sm sm:text-base text-white font-medium block mb-2">
+                      179, Thirunagar, Thirumalai Salai, Ramapuram, Chennai, Tamil Nadu – 600089
                     </span>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=179,+Thirunagar,+Thirumalai+Salai,+Ramapuram,+Chennai,+Tamil+Nadu+600089"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-['JetBrains_Mono'] text-xs text-[#ff6b00] hover:underline uppercase tracking-wider font-semibold inline-flex items-center gap-1 transition-transform hover:translate-x-1"
+                    >
+                      GET DIRECTIONS →
+                    </a>
                   </div>
                 </div>
 
@@ -116,16 +155,24 @@ export const ContactPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Operating Rhythms */}
+                {/* WhatsApp */}
                 <div className="flex items-start gap-3">
-                  <span className="material-symbols-outlined text-[#fabd00] text-xl mt-0.5">schedule</span>
-                  <div className="space-y-0.5">
+                  <span className="material-symbols-outlined text-[#25D366] text-xl mt-0.5">chat</span>
+                  <div className="space-y-0.5 w-full">
                     <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-[#94a3b8] block">
-                      Operating Rhythms
+                      WhatsApp
                     </span>
-                    <span className="font-['JetBrains_Mono'] text-xs text-white">
-                      {SITE_METADATA.operatingHours}
-                    </span>
+                    <div className="flex items-center justify-between mt-1">
+                      <a
+                        href="https://wa.me/919789283382"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-['JetBrains_Mono'] text-xs uppercase tracking-wider bg-transparent text-[#25D366] border border-[#25D366]/30 hover:bg-[#25D366]/10 px-3 py-1.5 rounded transition-all duration-200 inline-flex items-center gap-2 group"
+                      >
+                        CHAT ON WHATSAPP 
+                        <span className="material-symbols-outlined text-sm transition-transform duration-200 group-hover:translate-x-0.5">arrow_forward</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -184,10 +231,10 @@ export const ContactPage: React.FC = () => {
                     <span className="material-symbols-outlined text-3xl">check_circle</span>
                   </div>
                   <h3 className="font-['Space_Grotesk'] text-2xl font-bold uppercase text-white">
-                    Transmission Received
+                    MESSAGE SENT ✓
                   </h3>
                   <p className="font-['DM_Sans'] text-sm text-[#94a3b8] max-w-md mx-auto leading-relaxed">
-                    Our team has logged your dispatch. An architect will review your project parameters and reply directly to <span className="text-white font-medium">{formData.email}</span> within 24 operational hours.
+                    Thanks for reaching out. Your message has been sent to CreateOn Software.
                   </p>
                   <button
                     onClick={() => {
@@ -196,9 +243,7 @@ export const ContactPage: React.FC = () => {
                         name: '',
                         email: '',
                         company: '',
-                        discipline: 'web_product',
-                        scope: '',
-                        timeline: '2_4_months',
+                        message: '',
                       });
                     }}
                     className="inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider text-[#ff6b00] hover:underline pt-2 font-bold"
@@ -230,7 +275,7 @@ export const ContactPage: React.FC = () => {
                         placeholder="Your full name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] px-4 py-3 rounded text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b]"
+                        className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] px-4 py-3 rounded text-base sm:text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b]"
                       />
                     </div>
 
@@ -248,7 +293,7 @@ export const ContactPage: React.FC = () => {
                         placeholder="your@email.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] px-4 py-3 rounded text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b]"
+                        className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] px-4 py-3 rounded text-base sm:text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b]"
                       />
                     </div>
                   </div>
@@ -267,38 +312,11 @@ export const ContactPage: React.FC = () => {
                       placeholder="Your company or project name"
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] px-4 py-3 rounded text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b]"
+                      className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] px-4 py-3 rounded text-base sm:text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b]"
                     />
                   </div>
 
-                  {/* Core Capability Required (Matching Stitch UI Image 10) */}
-                  <div className="space-y-2">
-                    <label className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-widest text-[#94a3b8] block">
-                      CORE CAPABILITY REQUIRED
-                    </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                      {[
-                        { key: 'web_product', label: 'Web App / SaaS' },
-                        { key: 'mobile', label: 'Mobile Native' },
-                        { key: 'brand_experience', label: 'Editorial Site' },
-                        { key: 'ecommerce', label: 'E-Commerce' },
-                      ].map((discipline) => (
-                        <button
-                          key={discipline.key}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, discipline: discipline.key })}
-                          className={`p-2.5 rounded text-center font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider transition-all duration-150 border ${
-                            formData.discipline === discipline.key
-                              ? 'bg-[#ff6b00] text-[#081426] border-[#ff6b00] font-bold'
-                              : 'bg-[#071325] text-[#94a3b8] hover:text-white border-white/[0.08]'
-                          }`}
-                        >
-                          {discipline.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
+                  {/* Removed Core Capability */}
                   {/* What are you building? */}
                   <div className="space-y-1.5">
                     <label
@@ -308,43 +326,17 @@ export const ContactPage: React.FC = () => {
                       WHAT ARE YOU BUILDING? <span className="text-[#ff6b00]">*</span>
                     </label>
                     <textarea
-                      id="project-scope"
+                      id="project-message"
                       rows={4}
                       required
                       placeholder="Tell us about your goals, scope, and timeline..."
-                      value={formData.scope}
-                      onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
-                      className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] p-4 rounded text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b] resize-y"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className="w-full bg-[#071325] text-white border border-white/[0.1] focus:border-[#ff6b00] p-4 rounded text-base sm:text-sm font-['DM_Sans'] focus:outline-none transition-all placeholder:text-[#64748b] resize-y"
                     />
                   </div>
 
-                  {/* Estimated Timeline */}
-                  <div className="space-y-2">
-                    <label className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-widest text-[#94a3b8] block">
-                      ESTIMATED TIMELINE
-                    </label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {[
-                        { key: '1_2_months', label: '1-2 months' },
-                        { key: '2_4_months', label: '2-4 months' },
-                        { key: 'flexible', label: 'Flexible' },
-                      ].map((time) => (
-                        <button
-                          key={time.key}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, timeline: time.key })}
-                          className={`p-2.5 rounded text-center font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider transition-all duration-150 border ${
-                            formData.timeline === time.key
-                              ? 'bg-[#ff6b00] text-[#081426] border-[#ff6b00] font-bold'
-                              : 'bg-[#071325] text-[#94a3b8] hover:text-white border-white/[0.08]'
-                          }`}
-                        >
-                          {time.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
+                  {/* Removed Estimated Timeline */}
                   {/* Submit Button */}
                   <div className="pt-2 space-y-4">
                     <button
@@ -352,7 +344,7 @@ export const ContactPage: React.FC = () => {
                       disabled={submitting}
                       className="w-full inline-flex items-center justify-center gap-2 font-['JetBrains_Mono'] text-sm uppercase tracking-widest bg-[#ff6b00] text-[#081426] font-bold py-4 rounded hover:bg-[#ff8a00] hover:text-black transition-all duration-200 active:scale-[0.99] shadow-md group disabled:opacity-50"
                     >
-                      <span>{submitting ? 'TRANSMITTING DISPATCH...' : 'START A CONVERSATION'}</span>
+                      <span>{submitting ? 'SENDING MESSAGE...' : 'START A CONVERSATION'}</span>
                       <span className="material-symbols-outlined text-lg transition-transform duration-200 group-hover:translate-x-1.5">
                         arrow_forward
                       </span>

@@ -23,9 +23,19 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPath, onNavigate }) => {
     setMobileMenuOpen(false);
   };
 
+  const [scrolled, setScrolled] = useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#071325]/95 backdrop-blur-md border-b border-white/[0.08]">
-      <div className="h-20 max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 flex items-center justify-between gap-6">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#030e20]/80 backdrop-blur-md border-b border-white/[0.1] shadow-md' : 'bg-[#071325] border-b border-transparent'}`}>
+      <div className={`max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 flex items-center justify-between gap-6 transition-all duration-300 ${scrolled ? 'h-16' : 'h-24'}`}>
         {/* Brand Logo */}
         <div className="flex items-center gap-4">
           <button

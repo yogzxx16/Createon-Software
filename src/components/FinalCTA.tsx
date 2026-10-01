@@ -45,7 +45,7 @@ export const FinalCTA: React.FC<FinalCTAProps> = ({
               START A PROJECT →
             </button>
             <a
-              href="mailto:hello@createonsoftware.com"
+              href="mailto:createonsoftware@gmail.com"
               className="w-full sm:w-auto inline-flex items-center justify-center font-['JetBrains_Mono'] text-sm uppercase tracking-wider bg-transparent text-white border border-white/[0.14] hover:border-white hover:bg-white/[0.04] font-medium px-8 py-4 rounded transition-all duration-200 text-center"
             >
               JUST SAY HELLO

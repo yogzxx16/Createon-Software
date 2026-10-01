@@ -161,8 +161,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onNavigate }) => {
                   </p>
                 </div>
                 <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between font-['JetBrains_Mono'] text-xs">
-                  <span className="text-[#94a3b8]">COGNITIVE LOAD REDUCTION METRIC</span>
-                  <span className="text-[#ff6b00] font-bold">-42.8% LATENCY OVERHEAD</span>
+                  <span className="text-[#94a3b8]">PROJECT STATUS</span>
+                  <span className="text-[#ff6b00] font-bold">ACTIVE SPRINT</span>
                 </div>
               </div>
 
@@ -258,8 +258,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onNavigate }) => {
                     </div>
 
                     <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[0.625rem] text-[#94a3b8] mb-1">
-                      <span>STREAM THROUGHPUT (REQ/S)</span>
-                      <span className="text-white font-bold">14,280 IOPS</span>
+                      <span>STREAM THROUGHPUT</span>
+                      <span className="text-white font-bold">OPTIMIZED</span>
                     </div>
 
                     {/* Live SVG Wave Curve */}
@@ -278,10 +278,9 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onNavigate }) => {
                       </svg>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-2 font-['JetBrains_Mono'] text-[0.625rem] text-center">
-                      <div className="bg-[#071325] py-1 rounded text-[#94a3b8]">CPU: 23%</div>
-                      <div className="bg-[#071325] py-1 rounded text-[#94a3b8]">MEM: 1.4GB</div>
-                      <div className="bg-[#071325] py-1 rounded text-[#d7e3fc]">UPTIME: 99.98%</div>
+                    <div className="grid grid-cols-3 gap-2 font-['JetBrains_Mono'] text-[0.625rem] text-center">
+                      <div className="bg-[#071325] py-1 rounded text-[#94a3b8]">READY</div>
+                      <div className="bg-[#071325] py-1 rounded text-[#d7e3fc]">SYNCING</div>
                       <button className="bg-[#ff6b00] text-[#081426] py-1 rounded font-bold hover:bg-[#ff8a00]">
                         EXECUTE ↵
                       </button>
@@ -354,8 +353,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onNavigate }) => {
                     </div>
                     <div className="bg-[#101c2e] p-2.5 rounded border border-white/[0.06]">
                       <span className="material-symbols-outlined text-sm text-emerald-400 block mb-0.5">speed</span>
-                      <span className="text-white">100/100 PSI</span>
-                      <span className="text-[#94a3b8] block mt-0.5">Sub-50ms TTFB</span>
+                      <span className="text-white">PERFORMANCE</span>
+                      <span className="text-[#94a3b8] block mt-0.5">Optimized</span>
                     </div>
                     <div className="bg-[#101c2e] p-2.5 rounded border border-white/[0.06]">
                       <span className="material-symbols-outlined text-sm text-[#fabd00] block mb-0.5">search</span>

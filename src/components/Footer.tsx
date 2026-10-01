@@ -66,11 +66,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
             <div className="pt-2">
               <h4 className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#94a3b8] mb-2">
-                Presence
+                Location
               </h4>
-              <p className="font-['DM_Sans'] text-sm text-[#d7e3fc] flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#ff6b00] text-base">location_on</span>
-                Studio based in Chennai, Tamil Nadu, India
+              <p className="font-['DM_Sans'] text-sm text-[#d7e3fc] flex items-start gap-2 max-w-[200px]">
+                <span className="material-symbols-outlined text-[#ff6b00] text-base mt-0.5">location_on</span>
+                <span>179, Thirunagar, Thirumalai Salai, Ramapuram, Chennai, Tamil Nadu – 600089</span>
               </p>
             </div>
           </div>
@@ -82,20 +82,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <div className="flex flex-col gap-2.5">
               <a
-                href="mailto:hello@createonsoftware.com"
+                href={`mailto:${SITE_METADATA.email}`}
                 className="font-['JetBrains_Mono'] text-xs text-[#ff6b00] hover:underline transition-colors flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">mail</span>
                 {SITE_METADATA.email}
               </a>
-              <span className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer">
+              <a
+                href="https://wa.me/919789283382"
+                target="_blank"
+                rel="noreferrer"
+                className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] hover:text-[#25D366] transition-colors flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">chat</span>
+                WhatsApp
+              </a>
+              <a
+                href={SITE_METADATA.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] hover:text-[#E1306C] transition-colors flex items-center gap-1.5"
+                aria-label="Visit CreateOn Software on Instagram"
+              >
                 <span className="material-symbols-outlined text-sm">share</span>
                 Instagram
-              </span>
-              <span className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer">
-                <span className="material-symbols-outlined text-sm">work</span>
-                LinkedIn
-              </span>
+              </a>
             </div>
           </div>
         </div>
