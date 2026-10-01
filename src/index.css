@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+  --font-space: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-body: "DM Sans", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --color-surface: #071325;
+  --color-surface-dim: #071325;
+  --color-surface-bright: #2e394d;
+  --color-surface-lowest: #030e20;
+  --color-surface-low: #101c2e;
+  --color-surface-container: #142032;
+  --color-surface-high: #1f2a3d;
+  --color-surface-highest: #2a3549;
+
+  --color-createon-orange: #ff6b00;
+  --color-warm-orange: #ff8a00;
+  --color-golden-amber: #fabd00;
+  --color-golden-yellow: #ffc107;
+  --color-soft-yellow: #ffe082;
+  
+  --color-on-surface: #d7e3fc;
+  --color-on-surface-variant: #e2bfb0;
+  --color-slate-subtle: #94a3b8;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-body);
+    background-color: #071325;
+    color: #d7e3fc;
+  }
+
+  body {
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-color: #071325;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-space);
+    letter-spacing: -0.025em;
+  }
+
+  code, pre, .font-mono, [data-mono] {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071325;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2a3d;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff6b00;
+}
+
