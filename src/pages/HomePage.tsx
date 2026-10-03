@@ -3,7 +3,7 @@ import { RoutePath } from '../types';
 import { SERVICES, PROCESS_STEPS } from '../data/siteContent';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'motion/react';
 import { HeroInteractiveVisual } from '../components/HeroInteractiveVisual';
-import { ProcessShowcase } from '../components/ProcessShowcase';
+import { ProcessSectionV2 } from '../components/ProcessSectionV2';
 
 
 interface HomePageProps {
@@ -411,7 +411,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* 6. FROM IDEA TO LAUNCH (Sticky Process) */}
-      <ProcessShowcase />
+      <ProcessSectionV2 />
 
       {/* 7. DIGITAL EXPERIENCE DEMONSTRATION */}
       <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 py-20 lg:py-32 border-t border-white/[0.08]">
