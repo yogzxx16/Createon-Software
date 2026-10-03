@@ -139,7 +139,7 @@ export default function App() {
       <Navbar currentPath={currentPath} onNavigate={handleNavigate} />
 
       {/* Main Content Area */}
-      <main className="flex-1 w-full pt-20 overflow-hidden">
+      <main className="flex-1 w-full pt-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPath}

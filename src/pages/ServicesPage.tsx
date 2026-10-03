@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { RoutePath } from '../types';
 import { SERVICES } from '../data/siteContent';
 import { ServiceRow } from '../components/ServiceRow';
@@ -8,361 +9,440 @@ interface ServicesPageProps {
 }
 
 export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate }) => {
+  const prefersReducedMotion = useReducedMotion();
+
+  // Group services
+  const digitalExperiences = SERVICES.filter(s => s.category === 'DIGITAL EXPERIENCES');
+  const businessGrowth = SERVICES.filter(s => s.category === 'BUSINESS & GROWTH');
+  const mobile = SERVICES.filter(s => s.category === 'MOBILE');
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: 'easeOut',
+        when: 'beforeChildren',
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  const cardContainerVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: 'easeOut',
+        when: 'beforeChildren',
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
   return (
     <div className="flex flex-col w-full overflow-hidden">
       {/* =========================================================================
-          HERO ARCHITECTURAL HEADER (Matching Stitch UI Image 8)
+          HERO SECTION
          ========================================================================= */}
-      <section className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-12 lg:pt-20 pb-16">
-        {/* Ambient atmospheric lighting */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-12 lg:pt-20 pb-16"
+      >
         <div className="pointer-events-none absolute -top-40 right-1/4 w-[580px] h-[580px] bg-[#ff6b00]/10 rounded-full blur-[140px]" />
-        <div className="pointer-events-none absolute top-[900px] -left-32 w-[460px] h-[460px] bg-[#fabd00]/5 rounded-full blur-[160px]" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
-          <div className="lg:col-span-8 flex flex-col">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#ff6b00] animate-pulse" />
-              <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-[0.2em] text-[#ff6b00] font-semibold">
-                OUR CAPABILITIES
-              </span>
-              <span className="text-white/20 font-['JetBrains_Mono'] text-xs">/</span>
-              <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#94a3b8] tracking-widest">
-                DISCIPLINE MATRIX
-              </span>
-            </div>
-
-            <h1 className="font-['Space_Grotesk'] text-4xl sm:text-6xl lg:text-[4.75rem] font-bold uppercase text-white tracking-tight leading-none mb-6">
-              WHAT WE <span className="text-[#ff6b00]">DO.</span>
-            </h1>
-
-            <p className="font-['DM_Sans'] text-base sm:text-lg text-[#94a3b8] max-w-2xl leading-relaxed">
-              Digital experiences designed around your business, your users and your goals. We unite high-rigor engineering with tactile design systems.
-            </p>
-          </div>
-
-          <div className="lg:col-span-4 flex flex-col justify-end lg:items-end">
-            <div className="bg-[#101c2e] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-2 max-w-xs w-full shadow-xl">
-              <div className="flex items-center justify-between text-[#94a3b8]">
-                <span className="font-['JetBrains_Mono'] text-[0.6875rem] tracking-widest uppercase">
-                  DELIVERY CAPACITY
-                </span>
-                <span className="font-['JetBrains_Mono'] text-[0.6875rem] text-[#fabd00] font-bold">
-                  08 CORE TRACKS
-                </span>
-              </div>
-              <div className="h-1 w-full bg-[#1f2a3d] rounded-full overflow-hidden mt-1">
-                <div className="h-full bg-gradient-to-r from-[#ff6b00] to-[#fabd00] w-4/5 rounded-full" />
-              </div>
-              <span className="font-['JetBrains_Mono'] text-[0.6875rem] text-[#d7e3fc]/80 mt-1">
-                Production Grade • Modular • Chennai Lab
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          VISUAL ANCHOR: ARCHITECTURAL RENDER FEATURE
-         ========================================================================= */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-20 lg:mb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-[#030e20] border border-white/[0.08] rounded-xl overflow-hidden shadow-2xl">
-          <div className="lg:col-span-7 relative h-72 sm:h-96 lg:h-[420px] overflow-hidden">
-            <img
-              src="/brand/architectural-concept.png"
-              alt="Structural Rigor & Code System"
-              className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#030e20] via-[#030e20]/30 to-transparent" />
-            <div className="absolute bottom-6 left-6 flex items-center gap-2 bg-[#101c2e]/90 backdrop-blur-md px-4 py-2 rounded-lg border border-white/[0.1]">
-              <span className="material-symbols-outlined text-[#ff6b00] text-lg">token</span>
-              <span className="font-['JetBrains_Mono'] text-xs text-[#d7e3fc] tracking-wider uppercase font-semibold">
-                STRUCTURAL RIGOR &amp; CODE SYSTEM
-              </span>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-between bg-[#101c2e]">
-            <div>
-              <div className="font-['JetBrains_Mono'] text-xs text-[#fabd00] uppercase tracking-widest mb-3 font-semibold">
-                SYSTEM PHILOSOPHY
-              </div>
-              <h3 className="font-['Space_Grotesk'] text-xl lg:text-2xl font-bold text-white uppercase mb-4 leading-snug">
-                ARCHITECTURE-DRIVEN CRAFT FOR AMBITIOUS INTERFACES.
-              </h3>
-              <p className="font-['DM_Sans'] text-sm sm:text-base text-[#94a3b8] leading-relaxed">
-                We do not treat engineering as an afterthought to design, nor aesthetic form as decoration over code. Every interface is calculated, tokenized, and constructed for absolute technical stability.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-6 mt-6 border-t border-white/[0.06]">
-              <div className="bg-[#071325] border border-white/[0.06] p-4 rounded-lg">
-                <div className="font-['Space_Grotesk'] text-2xl font-bold text-[#ff6b00]">
-                  100<span className="text-sm font-['JetBrains_Mono']">%</span>
-                </div>
-                <div className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase text-[#94a3b8] mt-1">
-                  Semantic Rigor
-                </div>
-              </div>
-              <div className="bg-[#071325] border border-white/[0.06] p-4 rounded-lg">
-                <div className="font-['Space_Grotesk'] text-2xl font-bold text-[#fabd00]">
-                  &lt;0.8<span className="text-sm font-['JetBrains_Mono']">s</span>
-                </div>
-                <div className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase text-[#94a3b8] mt-1">
-                  Core Web Vitals
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          CORE SERVICES DIRECTORY (01 to 08)
-         ========================================================================= */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32">
-        {/* Section Marker Bar */}
-        <div className="flex items-center justify-between py-4 bg-[#101c2e]/60 border border-white/[0.06] px-6 rounded-lg mb-4">
-          <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#94a3b8]">
-            SERVICES DIRECTORY // 2026 SPECS
-          </span>
-          <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#ff6b00] font-semibold">
-            CLICK ANY SERVICE TO EXPAND DETAILS ↓
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          {SERVICES.map((service) => (
-            <ServiceRow key={service.id} service={service} onNavigate={onNavigate} />
-          ))}
-        </div>
-      </section>
-
-      {/* =========================================================================
-          ENGINEERING LIFECYCLE / PIPELINE MONITOR (Matching Stitch UI Image 8)
-         ========================================================================= */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32">
-        <div className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-8 lg:p-12 shadow-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-5 flex flex-col">
-              <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#fabd00] font-semibold mb-2">
-                PRECISION WORKFLOW
-              </span>
-              <h3 className="font-['Space_Grotesk'] text-2xl sm:text-3xl font-bold uppercase text-white mb-4">
-                HOW WE DELIVER CODE WITHOUT FRICTION.
-              </h3>
-              <p className="font-['DM_Sans'] text-sm sm:text-base text-[#94a3b8] leading-relaxed mb-6">
-                Our engineering pipeline is stripped of bureaucratic ceremony. We operate in rapid sprint cycles with automated linters, unified design tokens, and live continuous staging.
-              </p>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 bg-[#071325] border border-white/[0.06] p-3 rounded-lg">
-                  <span className="material-symbols-outlined text-[#ff6b00] text-xl">terminal</span>
-                  <span className="font-['JetBrains_Mono'] text-xs text-white">Modular Repository Hierarchy</span>
-                </div>
-                <div className="flex items-center gap-3 bg-[#071325] border border-white/[0.06] p-3 rounded-lg">
-                  <span className="material-symbols-outlined text-[#fabd00] text-xl">design_services</span>
-                  <span className="font-['JetBrains_Mono'] text-xs text-white">Design Tokens Linked to Git Assets</span>
-                </div>
-                <div className="flex items-center gap-3 bg-[#071325] border border-white/[0.06] p-3 rounded-lg">
-                  <span className="material-symbols-outlined text-[#fabd00] text-xl">speed</span>
-                  <span className="font-['JetBrains_Mono'] text-xs text-white">Automated Performance Regression Gates</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Pipeline Visual Flow Chart */}
-            <div className="lg:col-span-7 bg-[#030e20] border border-white/[0.08] p-6 lg:p-8 rounded-xl flex flex-col justify-center">
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#94a3b8] tracking-wider">
-                  PIPELINE MONITOR [LIVE DISPATCH]
-                </span>
-                <span className="font-['JetBrains_Mono'] text-xs text-[#ff6b00] font-semibold">100% HEALTHY</span>
-              </div>
-
-              <svg className="w-full h-auto text-white" viewBox="0 0 600 240" fill="none">
-                <pattern id="services-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <circle cx="2" cy="2" r="1" fill="currentColor" fillOpacity="0.08" />
-                </pattern>
-                <rect width="600" height="240" fill="url(#services-grid)" />
-
-                {/* Connecting Lines */}
-                <path d="M 80 120 L 220 120" stroke="#FF6B00" strokeWidth="2" strokeDasharray="4 4" />
-                <path d="M 260 120 L 400 120" stroke="#FABD00" strokeWidth="2" />
-                <path d="M 440 120 L 520 120" stroke="#FFB693" strokeWidth="2" strokeDasharray="2 2" />
-
-                {/* Step 01 */}
-                <circle cx="60" cy="120" r="28" fill="#142032" stroke="#FF6B00" strokeWidth="2" />
-                <text x="60" y="117" textAnchor="middle" fill="#FFB693" fontFamily="Space Grotesk" fontSize="12" fontWeight="bold">
-                  AUDIT
-                </text>
-                <text x="60" y="132" textAnchor="middle" fill="#E2BFB0" fontFamily="JetBrains Mono" fontSize="9">
-                  DISCOVER
-                </text>
-
-                {/* Step 02 */}
-                <rect x="200" y="92" width="60" height="56" rx="6" fill="#142032" stroke="#FABD00" strokeWidth="2" />
-                <text x="230" y="118" textAnchor="middle" fill="#FFDF9E" fontFamily="Space Grotesk" fontSize="11" fontWeight="bold">
-                  TOKENS
-                </text>
-                <text x="230" y="133" textAnchor="middle" fill="#E2BFB0" fontFamily="JetBrains Mono" fontSize="9">
-                  SCHEMA
-                </text>
-
-                {/* Step 03 */}
-                <rect x="380" y="86" width="68" height="68" rx="8" fill="#1F2A3D" stroke="#FF6B00" strokeWidth="2" />
-                <text x="414" y="116" textAnchor="middle" fill="#FFFFFF" fontFamily="Space Grotesk" fontSize="11" fontWeight="bold">
-                  BUILD
-                </text>
-                <text x="414" y="132" textAnchor="middle" fill="#FFB693" fontFamily="JetBrains Mono" fontSize="9">
-                  FRONTEND
-                </text>
-
-                {/* Step 04 */}
-                <polygon points="530,96 565,120 530,144" fill="#FABD00" />
-                <text x="540" y="165" textAnchor="middle" fill="#FFDF9E" fontFamily="JetBrains Mono" fontSize="9">
-                  DEPLOY
-                </text>
-
-                {/* Metric Badges */}
-                <rect x="50" y="184" width="130" height="24" rx="4" fill="#071325" />
-                <text x="115" y="200" textAnchor="middle" fill="#D7E3FC" fontFamily="JetBrains Mono" fontSize="8">
-                  FIGMA ➔ CODE SYSTEM
-                </text>
-
-                <rect x="230" y="184" width="140" height="24" rx="4" fill="#071325" />
-                <text x="300" y="200" textAnchor="middle" fill="#D7E3FC" fontFamily="JetBrains Mono" fontSize="8">
-                  RESPONSIVE STACK TEST
-                </text>
-
-                <rect x="420" y="184" width="130" height="24" rx="4" fill="#071325" />
-                <text x="485" y="200" textAnchor="middle" fill="#FABD00" fontFamily="JetBrains Mono" fontSize="8">
-                  EDGE CDN LAUNCH
-                </text>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          OUR APPROACH (3 Core Tenets)
-         ========================================================================= */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32">
-        <div className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-8 lg:p-16 shadow-2xl">
-          <div className="max-w-3xl mb-12">
-            <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#ff6b00] font-semibold block mb-3">
-              OUR APPROACH
+        
+        <div className="flex flex-col max-w-4xl">
+          <motion.div variants={itemVariants} className="flex items-center gap-2 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#ff6b00] animate-pulse" />
+            <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-[0.2em] text-[#ff6b00] font-semibold">
+              OUR CAPABILITIES
             </span>
-            <h2 className="font-['Space_Grotesk'] text-3xl sm:text-5xl font-bold uppercase text-white tracking-tight leading-tight mb-4">
-              THE RIGHT SOLUTION STARTS WITH THE RIGHT QUESTIONS.
-            </h2>
-            <p className="font-['DM_Sans'] text-base sm:text-lg text-[#94a3b8] leading-relaxed">
-              Every project has different needs. We focus on understanding what you're building before deciding how to build it.
-            </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Tenet 01 */}
-            <div className="bg-[#071325] border border-white/[0.06] p-8 rounded-xl flex flex-col justify-between hover:border-[#ff6b00]/40 transition-colors">
-              <div>
-                <div className="w-12 h-12 rounded-lg bg-[#1f2a3d] flex items-center justify-center text-[#ff6b00] mb-6">
-                  <span className="material-symbols-outlined text-2xl">psychology_alt</span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-xs text-[#ff6b00] uppercase tracking-widest block mb-2 font-bold">
-                  TENET 01
-                </span>
-                <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">
-                  Discovery Before Code
-                </h3>
-                <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
-                  We dissect user behaviors, platform constraints, and commercial goals prior to writing a single line of production markup.
-                </p>
-              </div>
-              <div className="pt-8 border-t border-white/[0.06] mt-6">
-                <span className="font-['JetBrains_Mono'] text-[0.6875rem] text-[#94a3b8] uppercase tracking-wider block">
-                  PHASE 01 • STRATEGIC SCOPING
-                </span>
-              </div>
-            </div>
+          <motion.h1 variants={itemVariants} className="font-['Space_Grotesk'] text-4xl sm:text-6xl lg:text-[4.75rem] font-bold uppercase text-white tracking-tight leading-none mb-6">
+            WHAT WE <span className="text-[#ff6b00]">DO.</span>
+          </motion.h1>
 
-            {/* Tenet 02 */}
-            <div className="bg-[#071325] border border-white/[0.06] p-8 rounded-xl flex flex-col justify-between hover:border-[#fabd00]/40 transition-colors">
-              <div>
-                <div className="w-12 h-12 rounded-lg bg-[#1f2a3d] flex items-center justify-center text-[#fabd00] mb-6">
-                  <span className="material-symbols-outlined text-2xl">architecture</span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-xs text-[#fabd00] uppercase tracking-widest block mb-2 font-bold">
-                  TENET 02
-                </span>
-                <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">
-                  Purposeful Design Decisions
-                </h3>
-                <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
-                  No decorative fluff or arbitrary trends. Every spatial interval, typographic grade, and color token has an architectural function.
-                </p>
-              </div>
-              <div className="pt-8 border-t border-white/[0.06] mt-6">
-                <span className="font-['JetBrains_Mono'] text-[0.6875rem] text-[#94a3b8] uppercase tracking-wider block">
-                  PHASE 02 • SYSTEM MODELING
-                </span>
-              </div>
-            </div>
+          <motion.p variants={itemVariants} className="font-['DM_Sans'] text-xl sm:text-2xl text-white font-medium mb-4 leading-relaxed">
+            Websites, applications and digital systems built around your business goals.
+          </motion.p>
+          <motion.p variants={itemVariants} className="font-['DM_Sans'] text-base sm:text-lg text-[#94a3b8] max-w-2xl leading-relaxed">
+            From your first idea to a live product, we design, build and support the digital experience behind it.
+          </motion.p>
+        </div>
+      </motion.section>
 
-            {/* Tenet 03 */}
-            <div className="bg-[#071325] border border-white/[0.06] p-8 rounded-xl flex flex-col justify-between hover:border-[#d7e3fc]/40 transition-colors">
-              <div>
-                <div className="w-12 h-12 rounded-lg bg-[#1f2a3d] flex items-center justify-center text-[#d7e3fc] mb-6">
-                  <span className="material-symbols-outlined text-2xl">all_inclusive</span>
-                </div>
-                <span className="font-['JetBrains_Mono'] text-xs text-[#d7e3fc] uppercase tracking-widest block mb-2 font-bold">
-                  TENET 03
-                </span>
-                <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">
-                  Built for Longevity
-                </h3>
-                <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
-                  We engineer scalable patterns that your internal team can manage, extend, and deploy with confidence over the next decade.
-                </p>
-              </div>
-              <div className="pt-8 border-t border-white/[0.06] mt-6">
-                <span className="font-['JetBrains_Mono'] text-[0.6875rem] text-[#94a3b8] uppercase tracking-wider block">
-                  PHASE 03 • EVERGREEN LIFECYCLE
-                </span>
-              </div>
+      {/* =========================================================================
+          HERO VISUAL
+         ========================================================================= */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-20 lg:mb-24"
+      >
+        <div className="w-full relative rounded-2xl overflow-hidden shadow-2xl border border-white/[0.08] bg-[#030e20]">
+          <motion.img
+            initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.03 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            src="/brand/premium-workspace.png"
+            alt="CreateOn Software Workspace"
+            className="w-full h-auto block object-contain"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#030e20] via-transparent to-transparent opacity-80" />
+          <motion.div variants={itemVariants} className="absolute bottom-6 left-6 flex items-center gap-2 bg-[#101c2e]/90 backdrop-blur-md px-4 py-2 rounded-lg border border-white/[0.1]">
+            <span className="material-symbols-outlined text-[#ff6b00] text-lg">code_blocks</span>
+            <span className="font-['JetBrains_Mono'] text-xs text-[#d7e3fc] tracking-wider uppercase font-semibold">
+              DESIGN + DEVELOPMENT + DIGITAL PRODUCTS
+            </span>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* =========================================================================
+          GROUPED SERVICES
+         ========================================================================= */}
+      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32">
+        <div className="flex flex-col gap-16">
+          
+          {/* Group: Digital Experiences */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={containerVariants}>
+            <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
+              <h2 className="font-['Space_Grotesk'] text-2xl lg:text-3xl font-bold uppercase text-white tracking-tight">
+                DIGITAL EXPERIENCES
+              </h2>
+              <div className="h-[1px] flex-grow bg-white/[0.08]" />
+            </motion.div>
+            <div className="flex flex-col gap-2">
+              {digitalExperiences.map((service) => (
+                <ServiceRow key={service.id} service={service} onNavigate={onNavigate} />
+              ))}
             </div>
-          </div>
+          </motion.div>
+
+          {/* Group: Business & Growth */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={containerVariants}>
+            <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
+              <h2 className="font-['Space_Grotesk'] text-2xl lg:text-3xl font-bold uppercase text-white tracking-tight">
+                BUSINESS &amp; GROWTH
+              </h2>
+              <div className="h-[1px] flex-grow bg-white/[0.08]" />
+            </motion.div>
+            <div className="flex flex-col gap-2">
+              {businessGrowth.map((service) => (
+                <ServiceRow key={service.id} service={service} onNavigate={onNavigate} />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Group: Mobile */}
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={containerVariants}>
+            <motion.div variants={itemVariants} className="mb-6 flex items-center gap-4">
+              <h2 className="font-['Space_Grotesk'] text-2xl lg:text-3xl font-bold uppercase text-white tracking-tight">
+                MOBILE
+              </h2>
+              <div className="h-[1px] flex-grow bg-white/[0.08]" />
+            </motion.div>
+            <div className="flex flex-col gap-2">
+              {mobile.map((service) => (
+                <ServiceRow key={service.id} service={service} onNavigate={onNavigate} />
+              ))}
+            </div>
+          </motion.div>
+
         </div>
       </section>
 
       {/* =========================================================================
-          BOTTOM CTA (Matching Stitch UI Image 8)
+          WHAT WE CAN BUILD
          ========================================================================= */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pb-24 lg:pb-32">
-        <div className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-8 lg:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-          <div className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 bg-[#ff6b00]/15 rounded-full blur-[100px]" />
-          <div className="max-w-2xl relative z-10">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2 h-2 rounded-full bg-[#fabd00]" />
-              <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#fabd00] font-semibold">
-                HAVE A PROJECT IN MIND?
-              </span>
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={cardContainerVariants}
+        className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32"
+      >
+        <motion.div variants={itemVariants} className="mb-10">
+          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold uppercase text-white tracking-tight">
+            WHAT WE CAN BUILD
+          </h2>
+        </motion.div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Card 1 */}
+          <motion.div variants={itemVariants} className="group bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl hover:border-white/[0.15] transition-all duration-300 flex flex-col hover:-translate-y-[3px]">
+            <span className="material-symbols-outlined text-[#ff6b00] text-3xl mb-6 transition-transform duration-300 group-hover:-translate-y-1">language</span>
+            <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">WEBSITES</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-8 flex-grow">
+              Corporate websites, business sites and landing pages.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">React</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">SEO</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">CMS</span>
             </div>
+          </motion.div>
+
+          {/* Card 2 */}
+          <motion.div variants={itemVariants} className="group bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl hover:border-white/[0.15] transition-all duration-300 flex flex-col hover:-translate-y-[3px]">
+            <span className="material-symbols-outlined text-cyan-400 text-3xl mb-6 transition-transform duration-300 group-hover:-translate-y-1">web_traffic</span>
+            <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">WEB APPLICATIONS</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-8 flex-grow">
+              Interactive platforms and custom web applications.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">TypeScript</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">Node.js</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">REST APIs</span>
+            </div>
+          </motion.div>
+
+          {/* Card 3 */}
+          <motion.div variants={itemVariants} className="group bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl hover:border-white/[0.15] transition-all duration-300 flex flex-col hover:-translate-y-[3px]">
+            <span className="material-symbols-outlined text-[#fabd00] text-3xl mb-6 transition-transform duration-300 group-hover:-translate-y-1">query_stats</span>
+            <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">BUSINESS SYSTEMS</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-8 flex-grow">
+              Dashboards, ERP tools and internal management systems.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">MongoDB</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">Real-time Systems</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">Cloud Deployment</span>
+            </div>
+          </motion.div>
+
+          {/* Card 4 */}
+          <motion.div variants={itemVariants} className="group bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl hover:border-white/[0.15] transition-all duration-300 flex flex-col hover:-translate-y-[3px]">
+            <span className="material-symbols-outlined text-purple-400 text-3xl mb-6 transition-transform duration-300 group-hover:-translate-y-1">smartphone</span>
+            <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">MOBILE APPS</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-8 flex-grow">
+              Android and mobile-first applications for customers and teams.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">React Native</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">Android</span>
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] px-2 py-1 bg-[#0b1320] border border-white/[0.04] text-[#94a3b8] rounded group-hover:text-[#d7e3fc] transition-colors">Cross-platform</span>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* =========================================================================
+          HOW WE WORK
+         ========================================================================= */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32"
+      >
+        <div className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-8 lg:p-16 shadow-xl">
+          <motion.div variants={itemVariants} className="mb-12">
+            <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold uppercase text-white tracking-tight mb-4">
+              HOW WE WORK
+            </h2>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 relative">
+            {/* Connecting line for desktop */}
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: 'easeOut', delay: 0.2 }}
+              className="hidden lg:block absolute top-6 left-12 right-12 h-[2px] bg-white/[0.05] origin-left"
+            />
+
+            {/* Step 1 */}
+            <motion.div variants={itemVariants} className="relative z-10 flex flex-col">
+              <div className="w-12 h-12 rounded-full bg-[#0b1320] border-2 border-[#ff6b00] flex items-center justify-center font-['JetBrains_Mono'] text-[#ff6b00] font-bold mb-6">
+                01
+              </div>
+              <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">DISCOVER</h3>
+              <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-6">
+                We understand your business, audience and goals before we start.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Research</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">•</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Strategy</span>
+              </div>
+            </motion.div>
+
+            {/* Step 2 */}
+            <motion.div variants={itemVariants} className="relative z-10 flex flex-col">
+              <div className="w-12 h-12 rounded-full bg-[#0b1320] border-2 border-cyan-400 flex items-center justify-center font-['JetBrains_Mono'] text-cyan-400 font-bold mb-6">
+                02
+              </div>
+              <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">DESIGN</h3>
+              <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-6">
+                We turn the idea into a clear digital experience and visual direction.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">UX/UI</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">•</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Prototyping</span>
+              </div>
+            </motion.div>
+
+            {/* Step 3 */}
+            <motion.div variants={itemVariants} className="relative z-10 flex flex-col">
+              <div className="w-12 h-12 rounded-full bg-[#0b1320] border-2 border-[#fabd00] flex items-center justify-center font-['JetBrains_Mono'] text-[#fabd00] font-bold mb-6">
+                03
+              </div>
+              <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">BUILD</h3>
+              <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-6">
+                We develop the product, connect the systems and test the experience.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Development</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">•</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Testing</span>
+              </div>
+            </motion.div>
+
+            {/* Step 4 */}
+            <motion.div variants={itemVariants} className="relative z-10 flex flex-col">
+              <div className="w-12 h-12 rounded-full bg-[#0b1320] border-2 border-white/[0.2] flex items-center justify-center font-['JetBrains_Mono'] text-white font-bold mb-6">
+                04
+              </div>
+              <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">LAUNCH</h3>
+              <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-6">
+                We deploy, refine and support the product after release.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Deployment</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">•</span>
+                <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#64748b]">Support</span>
+              </div>
+            </motion.div>
+
+          </div>
+        </div>
+      </motion.section>
+
+      {/* =========================================================================
+          THE RIGHT SOLUTION
+         ========================================================================= */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={cardContainerVariants}
+        className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32"
+      >
+        <motion.div variants={itemVariants} className="max-w-3xl mb-12">
+          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-bold uppercase text-white tracking-tight leading-tight mb-4">
+            THE RIGHT SOLUTION STARTS WITH THE RIGHT QUESTIONS.
+          </h2>
+          <p className="font-['DM_Sans'] text-base sm:text-lg text-[#94a3b8] leading-relaxed">
+            Every business has different needs. We first understand the problem, then choose the technology that fits it.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div variants={itemVariants} className="bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl flex flex-col hover:border-white/[0.15] transition-all duration-300 hover:-translate-y-[2px]">
+            <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">DISCOVER BEFORE WE BUILD</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
+              We understand the business problem before choosing the solution.
+            </p>
+          </motion.div>
+          <motion.div variants={itemVariants} className="bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl flex flex-col hover:border-white/[0.15] transition-all duration-300 hover:-translate-y-[2px]">
+            <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">PURPOSEFUL DESIGN</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
+              Every screen and interaction has a reason.
+            </p>
+          </motion.div>
+          <motion.div variants={itemVariants} className="bg-[#101c2e] border border-white/[0.06] p-8 rounded-xl flex flex-col hover:border-white/[0.15] transition-all duration-300 hover:-translate-y-[2px]">
+            <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">BUILT TO GROW</h3>
+            <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
+              We build with future updates, users and business growth in mind.
+            </p>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* =========================================================================
+          NOT SURE WHAT YOU NEED?
+         ========================================================================= */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 lg:mb-32"
+      >
+        <motion.div variants={itemVariants} className="bg-[#0b1320] border border-[#ff6b00]/20 rounded-xl p-8 lg:p-12 text-center flex flex-col items-center">
+          <h2 className="font-['Space_Grotesk'] text-2xl sm:text-3xl font-bold uppercase text-white mb-4">
+            NOT SURE WHICH SERVICE YOU NEED?
+          </h2>
+          <p className="font-['DM_Sans'] text-base text-[#94a3b8] max-w-xl mx-auto mb-8">
+            Tell us what you're trying to build. We'll help you figure out the right digital solution.
+          </p>
+          <button
+            onClick={() => onNavigate('/contact')}
+            className="group/btn inline-flex items-center gap-2 justify-center font-['JetBrains_Mono'] text-sm uppercase tracking-wider bg-transparent border-2 border-[#ff6b00] text-[#ff6b00] font-bold px-8 py-3 rounded hover:bg-[#ff6b00] hover:text-[#081426] transition-all duration-300 hover:-translate-y-px hover:shadow-lg hover:shadow-[#ff6b00]/20"
+          >
+            <span>LET’S TALK</span>
+            <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
+          </button>
+        </motion.div>
+      </motion.section>
+
+      {/* =========================================================================
+          FINAL CTA
+         ========================================================================= */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={containerVariants}
+        className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pb-24 lg:pb-32"
+      >
+        <motion.div variants={itemVariants} className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-8 lg:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div className="max-w-2xl relative z-10">
             <h2 className="font-['Space_Grotesk'] text-3xl sm:text-5xl font-bold uppercase text-white tracking-tight leading-tight">
               LET’S TALK ABOUT YOUR REQUIREMENTS.
             </h2>
             <p className="font-['DM_Sans'] text-base text-[#94a3b8] mt-4 max-w-xl">
-              From greenfield digital applications to modular redesigns, tell us what you're crafting and we'll outline the architectural roadmap.
+              Tell us what you're building, what you're trying to improve, or where you're stuck.
             </p>
           </div>
-          <div className="relative z-10">
+          <div className="relative z-10 flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => onNavigate('/contact')}
-              className="inline-flex items-center justify-center font-['JetBrains_Mono'] text-sm uppercase tracking-wider bg-[#ff6b00] text-[#081426] font-bold px-8 py-4 rounded hover:bg-[#ff8a00] hover:text-black transition-all duration-200 shadow-lg shadow-[#ff6b00]/20 active:scale-[0.98] text-center whitespace-nowrap"
+              className="group/btn inline-flex items-center gap-2 justify-center font-['JetBrains_Mono'] text-sm uppercase tracking-wider bg-[#ff6b00] text-[#081426] font-bold px-8 py-4 rounded hover:bg-[#ff8a00] hover:text-black transition-all duration-300 shadow-lg shadow-[#ff6b00]/20 active:scale-[0.98] text-center whitespace-nowrap hover:-translate-y-px"
             >
-              LET’S TALK →
+              <span>LET’S TALK</span>
+              <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
+            </button>
+            <button
+              onClick={() => onNavigate('/work')}
+              className="group/btn inline-flex items-center gap-2 justify-center font-['JetBrains_Mono'] text-sm uppercase tracking-wider bg-transparent border border-white/[0.2] text-white font-bold px-8 py-4 rounded hover:bg-white/[0.05] transition-all duration-300 active:scale-[0.98] text-center whitespace-nowrap hover:-translate-y-px"
+            >
+              <span>VIEW OUR WORK</span>
+              <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
             </button>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
     </div>
   );
 };

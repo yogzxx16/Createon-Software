@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { RoutePath } from '../types';
 import { PROCESS_STEPS } from '../data/siteContent';
 
@@ -7,376 +8,391 @@ interface ClientsPageProps {
 }
 
 export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
+  const prefersReducedMotion = useReducedMotion();
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: 'easeOut',
+        when: 'beforeChildren',
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  const tagsContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.04,
+      },
+    },
+  };
+
+  const tagVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 6 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
+
   return (
     <div className="flex flex-col w-full overflow-hidden">
       {/* =========================================================================
-          HERO & STUDIO PRINCIPLE (Matching Stitch UI Image 6)
+          HERO
          ========================================================================= */}
       <section className="relative w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pt-12 lg:pt-20 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-          {/* Left Title */}
-          <div className="lg:col-span-7 flex flex-col">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-2 h-2 rounded-full bg-[#ff6b00] animate-pulse" />
-              <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#ff6b00] font-semibold">
-                COLLABORATION
-              </span>
-            </div>
-            <h1 className="font-['Space_Grotesk'] text-4xl sm:text-6xl lg:text-[4.75rem] font-bold uppercase text-white tracking-tight leading-none mb-6">
-              PEOPLE WE<br />
-              <span className="text-[#ff6b00]">BUILD WITH.</span>
-            </h1>
-            <p className="font-['DM_Sans'] text-base sm:text-lg text-[#94a3b8] max-w-xl leading-relaxed">
-              We work closely with ambitious businesses, teams and creators to turn ideas into useful digital experiences.
-            </p>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-2 h-2 rounded-full bg-[#ff6b00] animate-pulse" />
+            <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#ff6b00] font-semibold">
+              COLLABORATION
+            </span>
           </div>
-
-          {/* Right Studio Principle Card */}
-          <div className="lg:col-span-5">
-            <div className="bg-[#101c2e] border border-white/[0.08] p-6 lg:p-8 rounded-xl shadow-xl flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between text-xs font-['JetBrains_Mono'] text-[#fabd00] uppercase tracking-wider mb-3">
-                  <span>STUDIO PRINCIPLE</span>
-                  <span className="material-symbols-outlined text-sm">verified_user</span>
-                </div>
-                <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">
-                  RADICAL TRANSPARENCY
-                </h3>
-                <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-6">
-                  No fabricated Fortune 500 logo ticker walls. No stock portraits disguised as customer testimonials. We showcase real partnerships, active sprint velocity, and tangible architectural code.
-                </p>
-              </div>
-              <div className="pt-4 border-t border-white/[0.06] font-['JetBrains_Mono'] text-[0.6875rem] text-emerald-400 font-semibold tracking-wider uppercase">
-                VERIFIED DEPLOYMENTS 100% UNFILTERED
-              </div>
-            </div>
-          </div>
+          <h1 className="font-['Space_Grotesk'] text-4xl sm:text-6xl lg:text-[4.75rem] font-bold uppercase text-white tracking-tight leading-none mb-6">
+            PEOPLE WE<br />
+            <span className="text-[#ff6b00]">BUILD WITH.</span>
+          </h1>
+          <p className="font-['DM_Sans'] text-base sm:text-lg text-[#94a3b8] max-w-xl leading-relaxed">
+            We work with businesses, teams and products that are building something useful for their customers.
+          </p>
         </div>
       </section>
 
       {/* =========================================================================
-          REAL CLIENT PARTNERSHIP CARDS (Matching Stitch UI Image 6)
+          CLIENT PROFILE CARDS
          ========================================================================= */}
-      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 space-y-12">
+      <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24 space-y-16 lg:space-y-24">
+        
         {/* Client 01: Cybernaut EdTech */}
-        <article className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-6 sm:p-10 lg:p-12 shadow-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-3">
-              <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#94a3b8] tracking-widest font-bold">
-                CLIENT 01 · EDTECH
+        <motion.article 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start group/article"
+        >
+          <div className="lg:col-span-5 flex flex-col order-2 lg:order-1">
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-cyan-400 font-bold block mb-2">
+                01 / EDTECH
               </span>
-            </div>
-            <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-[#fabd00] bg-[#fabd00]/10 px-3 py-1 rounded-full border border-[#fabd00]/30 font-semibold">
-              IN PROGRESS
-            </span>
+              <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold uppercase text-white tracking-tight">
+                CYBERNAUT EDTECH
+              </h2>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                ABOUT
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                Cybernaut is an EdTech organization focused on digital learning, campus transformation, enterprise product engineering and building a professional community around technology.
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                FOCUS
+              </h4>
+              <motion.div 
+                variants={tagsContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap gap-2"
+              >
+                {['Digital Learning', 'EdTech', 'Campus Programs', 'Enterprise Technology', 'Technology Community'].map(tag => (
+                  <motion.span variants={tagVariants} key={tag} className="font-['JetBrains_Mono'] text-xs text-cyan-400 bg-cyan-400/10 px-3 py-1.5 rounded-md border border-cyan-400/20">
+                    {tag}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="pt-2">
+              <a
+                href="https://www.cybernaut.co.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold text-white hover:text-cyan-400 transition-colors"
+              >
+                <span>VISIT WEBSITE</span>
+                <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
+              </a>
+            </motion.div>
           </div>
-
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-5xl font-bold uppercase text-white tracking-tight mb-2">
-            CYBERNAUT EDTECH
-          </h2>
-          <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#ff6b00] tracking-wider block mb-8">
-            CLIENT PROJECT · IN PROGRESS (DESIGN → DEV)
-          </span>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Visual Container */}
-            <div className="lg:col-span-5 bg-[#071325] border border-white/[0.06] rounded-xl p-4">
-              <div className="rounded overflow-hidden mb-3">
-                <img
-                  src="/projects/cybernaut.jpg"
-                  alt="Cybernaut EdTech"
-                  className="w-full h-56 object-cover"
-                />
-              </div>
-              <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[0.625rem] text-[#94a3b8] px-1 py-1">
-                <span>CLIENT PROJECT</span>
-                <span className="text-[#fabd00]">IN PROGRESS</span>
-              </div>
-              <div className="pt-2 mt-2 border-t border-white/[0.06] font-['JetBrains_Mono'] text-[0.625rem] text-[#d7e3fc]/70 flex items-center justify-between">
-                <span>SPRINT CADENCE: PHASE 2 TELEMETRY</span>
-                <span>NEXT.JS · WEBGL</span>
-              </div>
-            </div>
-
-            {/* Scope & Component Rigor Columns */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-[#071325] border border-white/[0.06] p-6 rounded-xl flex flex-col justify-between">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider text-[#fabd00] block mb-2 font-bold">
-                    SCOPE &amp; ARCHITECTURE
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                    BRAND EXPERIENCE &amp; UI ARCHITECTURE
-                  </h3>
-                  <p className="font-['DM_Sans'] text-xs sm:text-sm text-[#94a3b8] leading-relaxed">
-                    Next-generation learning console and interactive developer tooling. Low-latency visual rendering and responsive learning dashboards.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/[0.06] mt-4 font-['JetBrains_Mono'] text-[0.6875rem] text-[#ff6b00] flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">check_circle</span>
-                  <span>INTERACTIVE TELEMETRY HUD</span>
-                </div>
-              </div>
-
-              <div className="bg-[#071325] border border-white/[0.06] p-6 rounded-xl flex flex-col justify-between">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider text-[#fabd00] block mb-2 font-bold">
-                    STATUS UPDATE
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                    COMPONENT RIGOR
-                  </h3>
-                  <p className="font-['DM_Sans'] text-xs sm:text-sm text-[#94a3b8] leading-relaxed">
-                    High-fidelity design tokens mapped directly into production components. Rigorous telemetry stress tests under heavy payloads.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/[0.06] mt-4 font-['JetBrains_Mono'] text-[0.6875rem] text-[#fabd00] flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">sync</span>
-                  <span>DESIGN → DEVELOPMENT SYNC</span>
-                </div>
-              </div>
-
-              <div className="sm:col-span-2 pt-2 flex flex-wrap items-center gap-4">
-                <a
-                  href="https://www.cybernaut.co.in/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all"
-                >
-                  <span>EXPLORE CYBERNAUT PORTAL</span>
-                  <span className="material-symbols-outlined text-sm">arrow_outward</span>
-                </a>
-                <button
-                  onClick={() => onNavigate('/work/cybernaut')}
-                  className="inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider text-[#d7e3fc] hover:text-white border border-white/[0.14] hover:border-white px-4 py-3 rounded transition-all"
-                >
-                  <span>VIEW ARCHITECTURAL SPEC</span>
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                </button>
-              </div>
-            </div>
+          
+          <div className="lg:col-span-7 relative group/image rounded-2xl overflow-hidden bg-[#101c2e] border border-white/[0.08] shadow-2xl transition-transform duration-300 hover:-translate-y-0.5 order-1 lg:order-2">
+            <motion.img
+              initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              src="/clients/cybernaut.png"
+              alt="Cybernaut EdTech"
+              className="w-full h-auto block object-contain transition-transform duration-[400ms] ease-out group-hover/image:scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-[400ms] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-cyan-400 opacity-0 group-hover/image:opacity-100 transition-opacity duration-[400ms] pointer-events-none" />
           </div>
-        </article>
+        </motion.article>
 
-        {/* Client 02: Pakoda Boyz Biriyani */}
-        <article className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-6 sm:p-10 lg:p-12 shadow-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-3">
-              <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#94a3b8] tracking-widest font-bold">
-                CLIENT 02 · CULINARY
+        {/* Client 02: Pakoda Boyz */}
+        <motion.article 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start group/article"
+        >
+          <div className="lg:col-span-7 relative group/image rounded-2xl overflow-hidden bg-[#101c2e] border border-white/[0.08] shadow-2xl transition-transform duration-300 hover:-translate-y-0.5">
+            <motion.img
+              initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              src="/clients2images/pkb.jpeg"
+              alt="Pakoda Boyz Biriyani"
+              className="w-full h-auto block object-contain transition-transform duration-[400ms] ease-out group-hover/image:scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-[400ms] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500 opacity-0 group-hover/image:opacity-100 transition-opacity duration-[400ms] pointer-events-none" />
+          </div>
+          
+          <div className="lg:col-span-5 flex flex-col">
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-amber-500 font-bold block mb-2">
+                02 / HOSPITALITY & FOOD
               </span>
-            </div>
-            <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-[#fabd00] bg-[#fabd00]/10 px-3 py-1 rounded-full border border-[#fabd00]/30 font-semibold">
-              IN PROGRESS
-            </span>
+              <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold uppercase text-white tracking-tight">
+                PAKODA BOYZ BIRIYANI
+              </h2>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                ABOUT
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                Pakoda Boyz Biryani is a Chennai-based food and hospitality brand focused on biryani and a modern customer ordering experience.
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                FOCUS
+              </h4>
+              <motion.div 
+                variants={tagsContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap gap-2"
+              >
+                {['Biryani', 'Food & Hospitality', 'Takeaway', 'Delivery', 'Customer Experience'].map(tag => (
+                  <motion.span variants={tagVariants} key={tag} className="font-['JetBrains_Mono'] text-xs text-amber-500 bg-amber-500/10 px-3 py-1.5 rounded-md border border-amber-500/20">
+                    {tag}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="pt-2">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-2">
+                LOCATION
+              </h4>
+              <div className="flex items-start gap-1.5 font-['DM_Sans'] text-sm text-[#d7e3fc]/80">
+                <span className="material-symbols-outlined text-sm text-amber-500 mt-0.5">location_on</span>
+                <span>Chennai, Tamil Nadu</span>
+              </div>
+            </motion.div>
           </div>
-
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-5xl font-bold uppercase text-white tracking-tight mb-2">
-            PAKODA BOYZ BIRIYANI
-          </h2>
-          <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#fabd00] tracking-wider block mb-8">
-            CHENNAI, TAMIL NADU
-          </span>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Visual Container */}
-            <div className="lg:col-span-5 bg-[#071325] border border-white/[0.06] rounded-xl p-4">
-              <div className="rounded overflow-hidden mb-3">
-                <img
-                  src="/projects/pakoda-boyz.jpg"
-                  alt="Pakoda Boyz Biriyani"
-                  className="w-full h-56 object-cover"
-                />
-              </div>
-              <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[0.625rem] text-[#94a3b8] px-1 py-1">
-                <span>BRAND &amp; MENU ARCHITECTURE</span>
-                <span className="text-[#fabd00]">IN SPRINT</span>
-              </div>
-              <div className="pt-3 mt-2 border-t border-white/[0.06] font-['DM_Sans'] text-xs text-[#94a3b8] space-y-1">
-                <div className="flex items-start gap-1.5">
-                  <span className="material-symbols-outlined text-xs text-[#ff6b00] mt-0.5">location_on</span>
-                  <span>183 Periyar Pathai, Chennai, Tamil Nadu – 600094</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-xs text-[#fabd00]">call</span>
-                  <span>090030 96662</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Content Columns */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-[#071325] border border-white/[0.06] p-6 rounded-xl flex flex-col justify-between">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider text-[#fabd00] block mb-2 font-bold">
-                    ENGAGEMENT SCOPE
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                    BRAND IDENTITY &amp; DIGITAL EXPERIENCE
-                  </h3>
-                  <p className="font-['DM_Sans'] text-xs sm:text-sm text-[#94a3b8] leading-relaxed">
-                    Collaborative menu categorization, digital menu architecture, and authentic Chennai flavor photography art direction designed for fast-paced modern dining.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/[0.06] mt-4 font-['JetBrains_Mono'] text-[0.6875rem] text-[#ff6b00] flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">restaurant</span>
-                  <span>TACTILE EXPERIENCE &amp; MENUS</span>
-                </div>
-              </div>
-
-              <div className="bg-[#071325] border border-white/[0.06] p-6 rounded-xl flex flex-col justify-between">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider text-[#fabd00] block mb-2 font-bold">
-                    COLLABORATION DELIVERABLE
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                    MOBILE ORDERING FLOWS
-                  </h3>
-                  <p className="font-['DM_Sans'] text-xs sm:text-sm text-[#94a3b8] leading-relaxed">
-                    Streamlining local takeaway ordering and customer engagement through purposeful, friction-free mobile interfaces honoring Chennai's rich biryani tradition.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/[0.06] mt-4 font-['JetBrains_Mono'] text-[0.6875rem] text-[#fabd00] flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">phone_iphone</span>
-                  <span>DIRECT CUSTOMER EXPERIENCE</span>
-                </div>
-              </div>
-
-              <div className="sm:col-span-2 pt-2">
-                <span className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#fabd00]" />
-                  CLIENT PROJECT · IN PROGRESS (Website currently undergoing active sprint development)
-                </span>
-              </div>
-            </div>
-          </div>
-        </article>
+        </motion.article>
 
         {/* Client 03: Cafe Me */}
-        <article className="bg-[#101c2e] border border-white/[0.08] rounded-xl p-6 sm:p-10 lg:p-12 shadow-xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-3">
-              <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#94a3b8] tracking-widest font-bold">
-                CLIENT 03 · HOSPITALITY
+        <motion.article 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start group/article"
+        >
+          <div className="lg:col-span-5 flex flex-col order-2 lg:order-1">
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-orange-400 font-bold block mb-2">
+                03 / HOSPITALITY & CAFE
               </span>
-            </div>
-            <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 font-semibold">
-              LIVE DEPLOYMENT
-            </span>
-          </div>
+              <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold uppercase text-white tracking-tight">
+                CAFE ME
+              </h2>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                ABOUT
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                Cafe Me is a neighborhood vegetarian cafe in Chennai focused on artisan specials, curated comfort food and a welcoming cafe experience.
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                FOCUS
+              </h4>
+              <motion.div 
+                variants={tagsContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap gap-2"
+              >
+                {['Vegetarian Cafe', 'Artisan Specials', 'Comfort Food', 'Cafe Experience', 'Chennai'].map(tag => (
+                  <motion.span variants={tagVariants} key={tag} className="font-['JetBrains_Mono'] text-xs text-orange-400 bg-orange-400/10 px-3 py-1.5 rounded-md border border-orange-400/20">
+                    {tag}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.div>
 
-          <h2 className="font-['Space_Grotesk'] text-3xl sm:text-5xl font-bold uppercase text-white tracking-tight mb-2">
-            CAFE ME
-          </h2>
-          <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#fabd00] tracking-wider block mb-8">
-            K.K. NAGAR, CHENNAI
-          </span>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Visual Container */}
-            <div className="lg:col-span-5 bg-[#071325] border border-white/[0.06] rounded-xl p-4">
-              <div className="rounded overflow-hidden mb-3">
-                <img
-                  src="/projects/cafeme.jpg"
-                  alt="Cafe Me Website Screenshot"
-                  className="w-full h-56 object-cover"
-                />
-              </div>
-              <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[0.625rem] text-[#94a3b8] px-1 py-1">
-                <span>STATUS: LIVE IN PRODUCTION</span>
-                <span className="text-emerald-400">VERCEL DEPLOYED</span>
-              </div>
-              <div className="pt-3 mt-2 border-t border-white/[0.06] font-['DM_Sans'] text-xs text-[#94a3b8] space-y-1">
-                <div className="flex items-start gap-1.5">
-                  <span className="material-symbols-outlined text-xs text-[#ff6b00] mt-0.5">location_on</span>
-                  <span>Old No. 260, New No. 54, Alagirisamy Salai, Opp. PSBB School (Gate 1), Sector 8, K.K. Nagar, Chennai – 600078</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-xs text-[#fabd00]">call</span>
-                  <span>9042888988</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Content Columns */}
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="bg-[#071325] border border-white/[0.06] p-6 rounded-xl flex flex-col justify-between">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider text-[#fabd00] block mb-2 font-bold">
-                    DELIVERY HIGHLIGHTS
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                    WEBSITE DESIGN &amp; DEVELOPMENT
-                  </h3>
-                  <p className="font-['DM_Sans'] text-xs sm:text-sm text-[#94a3b8] leading-relaxed">
-                    A welcoming neighborhood café showcase highlighting pure vegetarian artisan specials, curated comfort platters, responsive layout architecture, and high-conversion tactile imagery.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/[0.06] mt-4 font-['JetBrains_Mono'] text-[0.6875rem] text-[#ff6b00] flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">coffee</span>
-                  <span>PURE VEGETARIAN SANCTUARY</span>
+            <motion.div variants={itemVariants} className="flex gap-8">
+              <div>
+                <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-2">
+                  LOCATION
+                </h4>
+                <div className="flex items-start gap-1.5 font-['DM_Sans'] text-sm text-[#d7e3fc]/80">
+                  <span className="material-symbols-outlined text-sm text-orange-400 mt-0.5">location_on</span>
+                  <span>K.K. Nagar, Chennai</span>
                 </div>
               </div>
-
-              <div className="bg-[#071325] border border-white/[0.06] p-6 rounded-xl flex flex-col justify-between">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider text-[#fabd00] block mb-2 font-bold">
-                    FEATURE MATRIX
-                  </span>
-                  <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                    INTERACTIVE MENU &amp; CONCIERGE
-                  </h3>
-                  <p className="font-['DM_Sans'] text-xs sm:text-sm text-[#94a3b8] leading-relaxed">
-                    Integrated WhatsApp table booking concierge, live café operating telemetry, interactive Google Maps directions, and pure vegetarian badge assurances.
-                  </p>
-                </div>
-                <div className="pt-4 border-t border-white/[0.06] mt-4 font-['JetBrains_Mono'] text-[0.6875rem] text-emerald-400 flex items-center gap-1">
-                  <span className="material-symbols-outlined text-sm">chat</span>
-                  <span>WHATSAPP CONCIERGE ENABLED</span>
-                </div>
-              </div>
-
-              {/* Live Link action */}
-              <div className="sm:col-span-2 pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#071325] border border-white/[0.06] p-4 rounded-xl">
-                <div>
-                  <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase text-[#94a3b8] block">
-                    LIVE APPLICATION
-                  </span>
-                  <span className="font-['JetBrains_Mono'] text-xs text-white">
-                    create-on-software-cafe-me.vercel.app
-                  </span>
-                </div>
+              
+              <div>
+                <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-2 invisible">
+                  LINK
+                </h4>
                 <a
                   href="https://create-on-software-cafe-me.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-6 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all"
+                  className="group/btn inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold text-white hover:text-orange-400 transition-colors"
                 >
-                  <span>VIEW LIVE SITE</span>
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  <span>VISIT WEBSITE</span>
+                  <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
                 </a>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </article>
+          
+          <div className="lg:col-span-7 relative group/image rounded-2xl overflow-hidden bg-[#101c2e] border border-white/[0.08] shadow-2xl transition-transform duration-300 hover:-translate-y-0.5 order-1 lg:order-2">
+            <motion.img
+              initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              src="/projects/cafeme.jpg"
+              alt="Cafe Me"
+              className="w-full h-auto block object-contain transition-transform duration-[400ms] ease-out group-hover/image:scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-[400ms] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-400 opacity-0 group-hover/image:opacity-100 transition-opacity duration-[400ms] pointer-events-none" />
+          </div>
+        </motion.article>
+
+        {/* Client 04: MicroFin */}
+        <motion.article 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start group/article"
+        >
+          <div className="lg:col-span-7 relative group/image rounded-2xl overflow-hidden bg-[#101c2e] border border-white/[0.08] shadow-2xl transition-transform duration-300 hover:-translate-y-0.5">
+            <motion.img
+              initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              src="/clients/MICROFIN.png"
+              alt="MicroFin Product"
+              className="w-full h-auto block object-contain transition-transform duration-[400ms] ease-out group-hover/image:scale-[1.02]"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-[400ms] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-blue-400 opacity-0 group-hover/image:opacity-100 transition-opacity duration-[400ms] pointer-events-none" />
+          </div>
+          
+          <div className="lg:col-span-5 flex flex-col">
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-blue-400 font-bold block mb-2">
+                04 / FINTECH & MICROFINANCE
+              </span>
+              <h2 className="font-['Space_Grotesk'] text-3xl sm:text-4xl font-bold uppercase text-white tracking-tight">
+                MICROFIN
+              </h2>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                ABOUT
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                MicroFin is a mobile-first microfinance management product designed to help finance managers organize customers, sectors, loans, collections, payments and financial records in one connected system.
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants} className="mb-8">
+              <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] font-bold mb-3">
+                FOCUS
+              </h4>
+              <motion.div 
+                variants={tagsContainerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="flex flex-wrap gap-2"
+              >
+                {['Microfinance', 'Financial Management', 'Loans', 'Collections', 'Customer Records'].map(tag => (
+                  <motion.span variants={tagVariants} key={tag} className="font-['JetBrains_Mono'] text-xs text-blue-400 bg-blue-400/10 px-3 py-1.5 rounded-md border border-blue-400/20">
+                    {tag}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.div variants={itemVariants} className="pt-2">
+              <a
+                href="https://micro-fi-ten.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold text-white hover:text-blue-400 transition-colors"
+              >
+                <span>VIEW PRODUCT</span>
+                <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
+              </a>
+            </motion.div>
+          </div>
+        </motion.article>
+
       </section>
 
       {/* =========================================================================
-          OUR COLLABORATIVE PROCESS (Section 02 from Stitch UI Image 6)
+          OUR COLLABORATIVE PROCESS
          ========================================================================= */}
       <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-24">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10 pb-6 border-b border-white/[0.08]">
           <div>
-            <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#fabd00] font-semibold block mb-2">
-              [ 02 · SYSTEMIC EXECUTION ]
-            </span>
             <h2 className="font-['Space_Grotesk'] text-3xl sm:text-5xl font-bold uppercase text-white tracking-tight">
               OUR COLLABORATIVE PROCESS
             </h2>
           </div>
-          <p className="font-['DM_Sans'] text-sm sm:text-base text-[#94a3b8] max-w-md">
-            A lean architectural rhythm crafted to eliminate friction and ensure every line of code serves the company thesis.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -392,12 +408,9 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
                 <h3 className="font-['Space_Grotesk'] text-xl font-bold uppercase text-white mb-3">
                   {step.title}
                 </h3>
-                <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed mb-6">
+                <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
                   {step.description}
                 </p>
-              </div>
-              <div className="pt-4 border-t border-white/[0.06] font-['JetBrains_Mono'] text-[0.6875rem] text-[#fabd00] uppercase">
-                DELIVERABLE: {step.deliverable}
               </div>
             </div>
           ))}
@@ -405,19 +418,16 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =========================================================================
-          CLIENT EXPERIENCE PROMISE (Section 03 from Stitch UI Image 6)
+          CLIENT EXPERIENCE PROMISE
          ========================================================================= */}
       <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 mb-20">
         <div className="mb-8">
-          <span className="font-['JetBrains_Mono'] text-xs uppercase tracking-widest text-[#fabd00] font-semibold block mb-2">
-            [ 03 · THE CREATEON PACT ]
-          </span>
           <h2 className="font-['Space_Grotesk'] text-2xl sm:text-4xl font-bold uppercase text-white tracking-tight">
-            CLIENT EXPERIENCE PROMISE
+            CLIENT EXPERIENCE
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-[#101c2e] border border-white/[0.08] p-8 rounded-xl flex flex-col justify-between">
             <div>
               <div className="w-10 h-10 rounded-lg bg-[#071325] border border-white/[0.08] flex items-center justify-center text-[#ff6b00] mb-6">
@@ -427,7 +437,7 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
                 DIRECT FOUNDER ACCESS
               </h3>
               <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
-                You talk directly with senior architects and principals who write the software. No intermediaries, junior handlers, or lost context.
+                Talk directly with the people building your product. Clear context and direct feedback.
               </p>
             </div>
           </div>
@@ -438,10 +448,10 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
                 <span className="material-symbols-outlined text-xl">chat_bubble</span>
               </div>
               <h3 className="font-['Space_Grotesk'] text-lg font-bold uppercase text-white mb-3">
-                NO UNNECESSARY JARGON
+                CLEAR COMMUNICATION
               </h3>
               <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
-                Transparent, pragmatic rationale behind every engineering decision. We speak in outcomes, user metrics, and business viability.
+                We speak your language. Decisions are explained clearly in business terms.
               </p>
             </div>
           </div>
@@ -455,28 +465,15 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
                 WEEKLY MILESTONES
               </h3>
               <p className="font-['DM_Sans'] text-sm text-[#94a3b8] leading-relaxed">
-                Predictable, measurable delivery increments every 7 days. You inspect live software weekly, not theoretical slide decks at the end.
+                Consistent progress updates every week, so you always know where the project stands.
               </p>
             </div>
           </div>
         </div>
-
-        {/* Studio Bandwidth reservation notice */}
-        <div className="p-4 rounded-xl bg-[#071325] border border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-['JetBrains_Mono'] text-xs">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#fabd00] animate-pulse" />
-            <span className="text-[#94a3b8] uppercase">2026 CLIENT CAPACITY ALLOCATION</span>
-            <span className="text-white font-bold">Only 2 concurrent studio slots available for Q2 engineering sprints</span>
-          </div>
-          <span className="text-[#fabd00] uppercase tracking-wider flex items-center gap-1 font-semibold">
-            <span className="material-symbols-outlined text-sm">lock_open</span>
-            RESERVATION WINDOW OPEN
-          </span>
-        </div>
       </section>
 
       {/* =========================================================================
-          BOTTOM CTA (Matching Stitch UI Image 6)
+          BOTTOM CTA
          ========================================================================= */}
       <section className="w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 pb-24">
         <div className="bg-[#101c2e] border border-white/[0.08] rounded-2xl p-8 sm:p-12 lg:p-16 text-center shadow-2xl flex flex-col items-center">
@@ -487,7 +484,7 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
             READY TO COLLABORATE WITH CREATEON?
           </h2>
           <p className="font-['DM_Sans'] text-base text-[#94a3b8] max-w-xl mb-8 leading-relaxed">
-            We are currently accepting a limited number of new client projects for 2026. Let's discuss your product roadmap and engineering ambitions.
+            Let's discuss your product roadmap and business ambitions.
           </p>
           <button
             onClick={() => onNavigate('/contact')}
@@ -495,9 +492,6 @@ export const ClientsPage: React.FC<ClientsPageProps> = ({ onNavigate }) => {
           >
             START A CONVERSATION →
           </button>
-          <div className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] uppercase tracking-wider">
-            AVERAGE RESPONSE: &lt; 24 HOURS · NDA INCLUDED BY DEFAULT
-          </div>
         </div>
       </section>
     </div>

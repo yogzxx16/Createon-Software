@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ProjectItem, RoutePath } from '../types';
 
 interface ProjectShowcaseProps {
@@ -9,165 +10,234 @@ interface ProjectShowcaseProps {
 
 export const ProjectShowcase: React.FC<ProjectShowcaseProps> = ({
   project,
-  onNavigate,
   index,
 }) => {
   const isEven = index % 2 === 0;
+  const prefersReducedMotion = useReducedMotion();
+
+  // Subtle project-specific visual accents
+  let accentText = 'text-[#ff6b00]';
+  let accentBorder = 'border-[#ff6b00]/30';
+  let accentBgHover = 'hover:bg-[#ff6b00] hover:text-[#081426]';
+  let accentBg = 'bg-[#ff6b00] text-[#081426]';
+  let accentLine = 'bg-[#ff6b00]';
+
+  if (project.id === 'cybernaut') {
+    // light / blue / cyan technology feel
+    accentText = 'text-cyan-400';
+    accentBorder = 'border-cyan-400/30';
+    accentBgHover = 'hover:bg-cyan-400 hover:text-[#081426]';
+    accentBg = 'bg-cyan-400 text-[#081426]';
+    accentLine = 'bg-cyan-400';
+  } else if (project.id === 'pakoda-boyz') {
+    // warm food / hospitality feel
+    accentText = 'text-amber-500';
+    accentBorder = 'border-amber-500/30';
+    accentBgHover = 'hover:bg-amber-500 hover:text-[#081426]';
+    accentBg = 'bg-amber-500 text-[#081426]';
+    accentLine = 'bg-amber-500';
+  } else if (project.id === 'cafeme') {
+    // warm cafe / lifestyle feel
+    accentText = 'text-orange-400';
+    accentBorder = 'border-orange-400/30';
+    accentBgHover = 'hover:bg-orange-400 hover:text-[#081426]';
+    accentBg = 'bg-orange-400 text-[#081426]';
+    accentLine = 'bg-orange-400';
+  } else if (project.id === 'microfin') {
+    // clean / fintech / professional
+    accentText = 'text-blue-400';
+    accentBorder = 'border-blue-400/30';
+    accentBgHover = 'hover:bg-blue-400 hover:text-[#081426]';
+    accentBg = 'bg-blue-400 text-[#081426]';
+    accentLine = 'bg-blue-400';
+  }
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 24 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: 'easeOut',
+        when: 'beforeChildren',
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  const tagsContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.04,
+      },
+    },
+  };
+
+  const tagVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 6 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
+
+  const isActive = project.status?.toLowerCase().includes('development') || project.status?.toLowerCase().includes('ongoing');
 
   return (
-    <article className="group bg-[#101c2e] border border-white/[0.08] hover:border-white/[0.16] rounded-xl overflow-hidden transition-all duration-300 shadow-xl">
-      <div className={`grid grid-cols-1 lg:grid-cols-12 gap-0 ${isEven ? '' : 'lg:flex-row-reverse'}`}>
-        {/* Project Visual Container */}
-        <div className={`lg:col-span-6 relative overflow-hidden bg-[#071325] min-h-[320px] sm:min-h-[400px] lg:min-h-[480px] flex items-center justify-center p-6 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-full object-cover rounded-lg border border-white/[0.08] transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#071325]/80 via-transparent to-transparent pointer-events-none" />
-          
-          {/* Overlay Status Pill */}
-          <div className="absolute top-8 left-8 flex flex-wrap items-center gap-2">
-            <span className={`font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider font-semibold px-3 py-1 rounded-full border ${
-              project.status.includes('LIVE')
-                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                : 'bg-[#fabd00]/10 text-[#fabd00] border-[#fabd00]/30'
-            }`}>
-              {project.status}
+    <motion.article
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
+      variants={containerVariants}
+      className="w-full flex flex-col mb-32 last:mb-0 group/article"
+    >
+      {/* Header Area */}
+      <div className="mb-10 lg:mb-12">
+        <motion.div variants={itemVariants} className="flex items-center gap-3 mb-3 relative w-fit">
+          <div className="relative flex items-center">
+            <span className={`font-['JetBrains_Mono'] text-sm uppercase tracking-widest font-bold ${accentText}`}>
+              {project.number}
             </span>
-            {project.stage && (
-              <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-[#d7e3fc]/80 bg-[#071325]/80 px-2.5 py-1 rounded border border-white/[0.1]">
-                {project.stage}
-              </span>
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2, ease: 'easeOut' }}
+              className={`absolute -bottom-1 left-0 right-0 h-[2px] origin-left ${accentLine} opacity-50`}
+            />
+          </div>
+          <span className={`font-['JetBrains_Mono'] text-sm uppercase tracking-widest font-bold ${accentText}`}>
+            — {project.category}
+          </span>
+          <span className={`flex items-center gap-2 font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-wider px-2 py-0.5 rounded-full border ${accentBorder} text-white/70 ml-2`}>
+            {isActive && (
+              <span className={`w-1.5 h-1.5 rounded-full ${accentLine} animate-pulse`} style={{ animationDuration: '3s' }} />
             )}
+            {!isActive && (
+              <span className={`w-1.5 h-1.5 rounded-full bg-green-500/70`} />
+            )}
+            {project.status}
+          </span>
+        </motion.div>
+        
+        <motion.h2 variants={itemVariants} className="font-['Space_Grotesk'] text-4xl sm:text-5xl lg:text-6xl font-bold uppercase text-white tracking-tight mb-5">
+          {project.title}
+        </motion.h2>
+        
+        <motion.p variants={itemVariants} className="font-['DM_Sans'] text-lg sm:text-xl text-[#94a3b8] max-w-4xl leading-relaxed">
+          {project.description}
+        </motion.p>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+        {/* Large Project Image */}
+        <div className={`lg:col-span-7 relative ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+          <div className="group/image relative rounded-2xl overflow-hidden bg-[#101c2e] border border-white/[0.08] shadow-2xl transition-transform duration-300 hover:-translate-y-0.5">
+            <motion.img
+              initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.04 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              src={project.image}
+              alt={project.title}
+              className="w-full h-auto block object-contain transition-transform duration-[400ms] ease-out group-hover/image:scale-[1.02]"
+              loading="lazy"
+            />
+            {/* Image Overlay Accent */}
+            <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-[400ms] pointer-events-none" />
+            <div className={`absolute bottom-0 left-0 right-0 h-1 ${accentLine} opacity-0 group-hover/image:opacity-100 transition-opacity duration-[400ms] pointer-events-none`} />
           </div>
         </div>
 
-        {/* Project Editorial Content */}
-        <div className={`lg:col-span-6 p-6 sm:p-10 lg:p-12 flex flex-col justify-between ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-          <div>
-            {/* Header / Number */}
-            <div className="flex items-center justify-between gap-4 mb-4">
-              <span className="font-['JetBrains_Mono'] text-sm uppercase text-[#ff6b00] tracking-widest font-bold">
-                [ {project.number} ]
-              </span>
-              <span className="font-['JetBrains_Mono'] text-xs uppercase text-[#94a3b8] tracking-widest">
-                {project.category}
-              </span>
-            </div>
-
-            <h3 className="font-['Space_Grotesk'] text-2xl sm:text-4xl font-bold uppercase text-white tracking-tight mb-2 group-hover:text-[#ff6b00] transition-colors">
-              {project.title}
-            </h3>
-
-            {project.subtitle && (
-              <p className="font-['JetBrains_Mono'] text-xs uppercase text-[#fabd00] tracking-wider mb-4">
-                {project.subtitle}
+        {/* Project Information */}
+        <div className={`lg:col-span-5 flex flex-col gap-10 py-4 ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+          
+          {/* Challenge / Solution / Delivered */}
+          <div className="flex flex-col gap-8">
+            <motion.div variants={itemVariants}>
+              <h4 className={`font-['JetBrains_Mono'] text-xs uppercase tracking-widest font-semibold mb-2 ${accentText}`}>
+                CHALLENGE
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                {project.challenge || 'Understanding the core business problem and target audience needs.'}
               </p>
-            )}
-
-            <p className="font-['DM_Sans'] text-base text-[#94a3b8] leading-relaxed mb-6">
-              {project.description}
-            </p>
-
-            {/* Specific Business Coordinates if available (Pakoda Boyz / Cafe Me) */}
-            {(project.address || project.phone || project.location) && (
-              <div className="bg-[#071325] border border-white/[0.06] rounded-lg p-4 mb-6 space-y-2">
-                {project.location && (
-                  <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-xs text-[#d7e3fc]">
-                    <span className="material-symbols-outlined text-[#ff6b00] text-sm">place</span>
-                    <span className="font-semibold">{project.location}</span>
-                    {project.business && <span className="text-[#94a3b8]">· {project.business}</span>}
-                  </div>
-                )}
-                {project.address && (
-                  <p className="font-['DM_Sans'] text-xs text-[#94a3b8] pl-6 leading-relaxed">
-                    {project.address}
-                  </p>
-                )}
-                {project.phone && (
-                  <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-xs text-[#94a3b8] pl-6">
-                    <span className="material-symbols-outlined text-xs">call</span>
-                    <span>{project.phone}</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Scope / Stack Specs */}
-            <div className="grid grid-cols-2 gap-4 py-4 border-t border-b border-white/[0.06] mb-6 font-['JetBrains_Mono'] text-xs">
-              {project.scope && (
-                <div>
-                  <span className="text-[#94a3b8] uppercase tracking-wider block text-[0.6875rem] mb-1">
-                    SCOPE
-                  </span>
-                  <span className="text-[#d7e3fc]">{project.scope}</span>
-                </div>
-              )}
-              {project.stack && (
-                <div>
-                  <span className="text-[#94a3b8] uppercase tracking-wider block text-[0.6875rem] mb-1">
-                    STACK
-                  </span>
-                  <span className="text-[#d7e3fc]">{project.stack}</span>
-                </div>
-              )}
-            </div>
+            </motion.div>
+            
+            <motion.div variants={itemVariants}>
+              <h4 className={`font-['JetBrains_Mono'] text-xs uppercase tracking-widest font-semibold mb-2 ${accentText}`}>
+                SOLUTION
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                {project.solution || 'Architected a robust digital experience focused on conversion and usability.'}
+              </p>
+            </motion.div>
+            
+            <motion.div variants={itemVariants}>
+              <h4 className={`font-['JetBrains_Mono'] text-xs uppercase tracking-widest font-semibold mb-2 ${accentText}`}>
+                WHAT WE'RE BUILDING / DELIVERED
+              </h4>
+              <p className="font-['DM_Sans'] text-base text-[#d7e3fc] leading-relaxed">
+                {project.delivered || 'A production-ready platform built on modern web infrastructure.'}
+              </p>
+            </motion.div>
           </div>
 
-          {/* Action CTAs */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
-            {project.liveUrl && (
+          {/* Tech / Services Tags */}
+          <motion.div variants={itemVariants} className="border-t border-white/[0.08] pt-8">
+            <h4 className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8] mb-4">
+              KEY FEATURES
+            </h4>
+            <motion.div 
+              variants={tagsContainerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="flex flex-wrap gap-2"
+            >
+              {project.tags?.map((tag, idx) => (
+                <motion.span
+                  key={idx}
+                  variants={tagVariants}
+                  className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] bg-[#101c2e] px-3 py-1.5 rounded-md border border-white/[0.08]"
+                >
+                  {tag}
+                </motion.span>
+              ))}
+              {project.deliverables?.map((del, idx) => (
+                <motion.span
+                  key={`del-${idx}`}
+                  variants={tagVariants}
+                  className="font-['JetBrains_Mono'] text-xs text-[#94a3b8] bg-[#101c2e] px-3 py-1.5 rounded-md border border-white/[0.08]"
+                >
+                  {del}
+                </motion.span>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* CTA Button */}
+          {project.liveUrl && (
+            <motion.div variants={itemVariants} className="pt-2">
               <a
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all active:scale-[0.98]"
+                className={`group/btn inline-flex items-center gap-3 font-['JetBrains_Mono'] text-sm uppercase tracking-wider font-bold px-6 py-4 rounded-lg transition-all duration-300 active:scale-[0.98] ${accentBg} hover:-translate-y-px hover:shadow-lg hover:shadow-white/5`}
               >
-                <span>VIEW LIVE SITE</span>
-                <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
+                <span>VIEW PROJECT</span>
+                <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover/btn:translate-x-1">arrow_outward</span>
               </a>
-            )}
-
-            {project.id === 'cybernaut' && (
-              <div className="flex flex-wrap gap-2">
-                <a
-                  href="https://www.cybernaut.co.in/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider font-bold bg-[#ff6b00] text-[#081426] px-5 py-3 rounded hover:bg-[#ff8a00] hover:text-black transition-all active:scale-[0.98]"
-                >
-                  <span>VIEW LIVE PORTAL</span>
-                  <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">arrow_outward</span>
-                </a>
-                {onNavigate && (
-                  <button
-                    onClick={() => onNavigate('/work/cybernaut')}
-                    className="group inline-flex items-center gap-2 font-['JetBrains_Mono'] text-xs uppercase tracking-wider text-[#d7e3fc] hover:text-white border border-white/[0.14] hover:border-white px-4 py-3 rounded transition-all active:scale-[0.98]"
-                  >
-                    <span>CASE STUDY BLUEPRINT</span>
-                    <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1.5">arrow_forward</span>
-                  </button>
-                )}
-              </div>
-            )}
-
-            {project.deliverables && project.deliverables.length > 0 && !project.liveUrl && project.id !== 'cybernaut' && (
-              <div className="flex flex-wrap gap-1.5">
-                {project.deliverables.map((del, dIdx) => (
-                  <span
-                    key={dIdx}
-                    className="font-['JetBrains_Mono'] text-[0.6875rem] text-[#94a3b8] bg-[#071325] px-2.5 py-1 rounded border border-white/[0.06]"
-                  >
-                    {del}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
+            </motion.div>
+          )}
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };

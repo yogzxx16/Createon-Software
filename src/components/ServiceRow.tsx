@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ServiceItem, RoutePath } from '../types';
 
 interface ServiceRowProps {
@@ -7,79 +8,85 @@ interface ServiceRowProps {
 }
 
 export const ServiceRow: React.FC<ServiceRowProps> = ({ service, onNavigate }) => {
-  const [expanded, setExpanded] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
+
+  const tagsContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.03,
+      },
+    },
+  };
+
+  const tagVariants = {
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 5 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  };
 
   return (
-    <article
-      onClick={() => setExpanded(!expanded)}
-      className="group bg-[#101c2e] hover:bg-[#142032] border border-white/[0.06] hover:border-white/[0.14] transition-all duration-300 rounded-xl p-6 lg:p-8 relative overflow-hidden shadow-sm cursor-pointer"
+    <motion.article
+      variants={itemVariants}
+      onClick={() => onNavigate?.('/contact')}
+      className="group bg-[#101c2e] hover:bg-[#13223a] border border-white/[0.04] hover:border-[#ff6b00]/30 transition-all duration-300 rounded-xl p-6 lg:p-8 relative shadow-sm hover:shadow-xl hover:-translate-y-[2px] cursor-pointer overflow-hidden"
     >
-      {/* Active orange vertical stripe */}
+      {/* Left accent line on hover */}
       <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#ff6b00] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
+      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        {/* Number */}
-        <div className="lg:col-span-1 flex items-baseline">
-          <span className="font-['JetBrains_Mono'] text-base text-[#ff6b00] tracking-wider font-bold">
-            {service.number}
-          </span>
-        </div>
-
-        {/* Title & Subline */}
-        <div className="lg:col-span-4">
-          <h2 className="font-['Space_Grotesk'] text-xl lg:text-2xl font-bold uppercase text-white tracking-tight group-hover:text-[#ffb693] transition-colors flex items-center gap-2">
-            {service.title}
-            <span className="material-symbols-outlined text-[#ff6b00] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all text-xl">
-              arrow_forward
+        {/* Left: Number, Title, Category */}
+        <div className="lg:col-span-4 flex flex-col">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-['JetBrains_Mono'] text-sm text-[#94a3b8] group-hover:text-white transition-colors font-bold">
+              {service.number}
             </span>
-          </h2>
-          <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-wider text-[#94a3b8] mt-1 block">
-            {service.tagline}
+            <div className="h-[2px] w-0 group-hover:w-4 bg-[#ff6b00] transition-all duration-300 origin-left" />
+          </div>
+          <h3 className="font-['Space_Grotesk'] text-xl lg:text-2xl font-bold uppercase text-white tracking-tight mb-1 group-hover:text-[#ffb693] transition-colors">
+            {service.title}
+          </h3>
+          <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#64748b] group-hover:text-cyan-400/80 transition-colors">
+            {service.category}
           </span>
         </div>
 
-        {/* Description */}
-        <div className="lg:col-span-4">
-          <p className="font-['DM_Sans'] text-sm sm:text-base text-[#d7e3fc]/80 leading-relaxed">
+        {/* Center: Description */}
+        <div className="lg:col-span-5 flex items-center h-full">
+          <p className="font-['DM_Sans'] text-base text-[#d7e3fc]/90 leading-relaxed">
             {service.description}
           </p>
         </div>
 
-        {/* Tags / Deliverables */}
-        <div className="lg:col-span-3 flex flex-col gap-2 lg:items-end">
-          <span className="font-['JetBrains_Mono'] text-[0.6875rem] uppercase tracking-widest text-[#fabd00] font-semibold">
-            {service.deliverablesLabel}
+        {/* Right: Tags */}
+        <div className="lg:col-span-3 flex flex-col gap-3 justify-center h-full">
+          <span className="font-['JetBrains_Mono'] text-[0.625rem] uppercase tracking-widest text-[#94a3b8]">
+            Typical capabilities
           </span>
-          <div className="flex flex-wrap lg:justify-end gap-1.5">
+          <motion.div 
+            variants={tagsContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-2"
+          >
             {service.tags.map((tag, tIdx) => (
-              <span
+              <motion.span
+                variants={tagVariants}
                 key={tIdx}
-                className="bg-[#1f2a3d] text-[#d7e3fc] text-[0.6875rem] font-['JetBrains_Mono'] px-2.5 py-1 rounded border border-white/[0.06]"
+                className="bg-[#0b1320] text-[#94a3b8] group-hover:text-[#d7e3fc] transition-colors text-[0.6875rem] font-['JetBrains_Mono'] px-3 py-1.5 rounded border border-white/[0.04] group-hover:border-cyan-400/20"
               >
                 {tag}
-              </span>
+              </motion.span>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
-
-      {/* Expanded details view */}
-      {expanded && onNavigate && (
-        <div className="mt-6 pt-6 border-t border-white/[0.08] flex items-center justify-between animate-in fade-in duration-200">
-          <span className="font-['JetBrains_Mono'] text-xs text-[#94a3b8]">
-            Looking for {service.title.toLowerCase()} for your product?
-          </span>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onNavigate('/contact');
-            }}
-            className="inline-flex items-center gap-1 font-['JetBrains_Mono'] text-xs uppercase tracking-wider text-[#ff6b00] hover:text-[#ff8a00] font-bold"
-          >
-            DISCUSS THIS SERVICE →
-          </button>
-        </div>
-      )}
-    </article>
+    </motion.article>
   );
 };

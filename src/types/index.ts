@@ -7,7 +7,7 @@ export interface ProjectItem {
   title: string;
   subtitle?: string;
   category: string;
-  status: 'CLIENT PROJECT · IN PROGRESS' | 'CLIENT PROJECT · LIVE';
+  status: string;
   stage?: string;
   location?: string;
   business?: string;
@@ -22,15 +22,17 @@ export interface ProjectItem {
   metrics?: { label: string; value: string }[];
   tags?: string[];
   deliverables?: string[];
+  challenge?: string;
+  solution?: string;
+  delivered?: string;
 }
 
 export interface ServiceItem {
   id: string;
   number: string;
   title: string;
-  tagline: string;
+  category: string;
   description: string;
-  deliverablesLabel: string;
   tags: string[];
 }
 
