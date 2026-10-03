@@ -1,0 +1,81 @@
+<html>
+<head>
+  <style>
+    body { background: #333; color: white; display: flex; flex-direction: column; align-items: center; }
+    .grid-container {
+      position: relative;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    img {
+      border: 1px solid #555;
+      background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 20px 20px;
+      display: block;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Grid View</h1>
+  
+  <h2>blob_44 (Rig Parts)</h2>
+  <div class="grid-container">
+    <img id="img44" src="blobs/blob_44.png" />
+    <canvas id="cvs44"></canvas>
+  </div>
+
+  <h2>blob_51 (Body)</h2>
+  <div class="grid-container">
+    <img id="img51" src="blobs/blob_51.png" />
+  </div>
+
+  <h2>blob_57 (Tails)</h2>
+  <div class="grid-container">
+    <img id="img57" src="blobs/blob_57.png" />
+  </div>
+
+  <script>
+    function drawGrid(imgId, cvsId) {
+      const img = document.getElementById(imgId);
+      img.onload = () => {
+        const cvs = document.getElementById(cvsId);
+        cvs.width = img.width;
+        cvs.height = img.height;
+        const ctx = cvs.getContext('2d');
+        
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.4)';
+        ctx.lineWidth = 1;
+        ctx.font = '8px Arial';
+        ctx.fillStyle = 'rgba(255, 255, 0, 0.7)';
+        
+        // 50px major lines
+        for (let x = 0; x <= img.width; x += 50) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, img.height); ctx.stroke();
+          ctx.fillText(x, x + 2, 10);
+        }
+        for (let y = 0; y <= img.height; y += 50) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(img.width, y); ctx.stroke();
+          ctx.fillText(y, 2, y - 2);
+        }
+
+        // 10px minor lines
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.15)';
+        for (let x = 0; x <= img.width; x += 10) {
+          if (x % 50 === 0) continue;
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, img.height); ctx.stroke();
+        }
+        for (let y = 0; y <= img.height; y += 10) {
+          if (y % 50 === 0) continue;
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(img.width, y); ctx.stroke();
+        }
+      };
+    }
+    drawGrid('img44', 'cvs44');
+  </script>
+</body>
+</html>

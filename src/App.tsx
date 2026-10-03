@@ -10,6 +10,7 @@ import { ContactPage } from './pages/ContactPage';
 import { CybernautCaseStudyPage } from './pages/CybernautCaseStudyPage';
 import { AnimatePresence, motion } from 'motion/react';
 
+
 export default function App() {
   const getInitialPath = (): RoutePath => {
     const p = window.location.pathname;
@@ -18,6 +19,8 @@ export default function App() {
     }
     return '/';
   };
+
+
 
   const [currentPath, setCurrentPath] = useState<RoutePath>(getInitialPath());
 
